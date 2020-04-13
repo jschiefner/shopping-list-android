@@ -15,12 +15,14 @@ public class Item {
     public UUID uuid;
 
     public String name;
+    public boolean completed;
     public Date createdAt;
     public Date updatedAt;
 
     public Item(String name) {
         this.name = name;
         this.uuid = UUID.randomUUID();
+        this.completed = false;
 
         Date now = new Date();
         this.createdAt = now;
