@@ -8,11 +8,11 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@TypeConverters(DateConverter.class)
+@TypeConverters({DateConverter.class, UUIDConverter.class})
 public class Item {
     @PrimaryKey(autoGenerate = true)
     public long id;
-    public String uuid;
+    public UUID uuid;
 
     public String name;
     public Date createdAt;
@@ -20,7 +20,7 @@ public class Item {
 
     public Item(String name) {
         this.name = name;
-        this.uuid = UUID.randomUUID().toString();
+        this.uuid = UUID.randomUUID();
 
         Date now = new Date();
         this.createdAt = now;

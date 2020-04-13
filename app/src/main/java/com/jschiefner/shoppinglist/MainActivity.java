@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "creating a new item", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                itemViewModel.insert(new Item("kuchen"));
             }
         });
 
