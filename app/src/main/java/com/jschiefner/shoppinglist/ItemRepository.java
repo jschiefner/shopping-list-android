@@ -22,6 +22,10 @@ public class ItemRepository {
         new InsertItemAsyncTask(itemDao).execute(item);
     }
 
+    public void delete(Item item) {
+        new DeleteItemAsyncTask(itemDao).execute(item);
+    }
+
     public LiveData<List<Item>> getItems() {
         return items;
     }
@@ -40,6 +44,20 @@ public class ItemRepository {
         @Override
         protected Void doInBackground(Item... items) {
             itemDao.insert(items[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteItemAsyncTask extends AsyncTask<Item, Void, Void> {
+        private ItemDao itemDao;
+
+        private DeleteItemAsyncTask(ItemDao itemDao) {
+            this.itemDao = itemDao;
+        }
+
+        @Override
+        protected Void doInBackground(Item... items) {
+            itemDao.delete(items[0]);
             return null;
         }
     }

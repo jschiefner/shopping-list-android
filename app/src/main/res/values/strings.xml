@@ -5,5 +5,7 @@
     <string name="shopping_fragment_label">Shopping Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="new_item">New Item</string>
+    <string name="button_save">Save</string>
 
 </resources>

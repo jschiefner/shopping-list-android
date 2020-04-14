@@ -37,15 +37,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            Snackbar.make(view, "creating a new item", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override

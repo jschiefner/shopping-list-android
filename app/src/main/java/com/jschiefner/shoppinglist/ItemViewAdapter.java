@@ -1,8 +1,6 @@
 package com.jschiefner.shoppinglist;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -11,10 +9,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +20,7 @@ public class ItemViewAdapter extends RecyclerView.Adapter<ItemViewAdapter.ItemVi
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         public EditText editText;
-        public int position;
+        public Item item;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -37,6 +31,9 @@ public class ItemViewAdapter extends RecyclerView.Adapter<ItemViewAdapter.ItemVi
                     Log.i("CUSTOM", textView.getText().toString());
                     InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                    if (!item.name.equals(editText.getText().toString())) {
+                        Log.i("CUSTOM", "updated!");
+                    }
 
                     return true;
                 }
@@ -70,7 +67,7 @@ public class ItemViewAdapter extends RecyclerView.Adapter<ItemViewAdapter.ItemVi
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Item currentItem = items.get(position);
         holder.editText.setText(currentItem.name);
-        holder.position = position;
+        holder.item = currentItem;
     }
 
     @Override
