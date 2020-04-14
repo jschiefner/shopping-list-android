@@ -47,6 +47,7 @@ public class ItemViewAdapter extends RecyclerView.Adapter<ItemViewAdapter.ItemVi
                     if (hasFocus) return;
 
                     EditText editText = (EditText) view;
+                    editText.clearFocus();
                     Log.i("CUSTOM", editText.getText().toString());
                 }
             });
