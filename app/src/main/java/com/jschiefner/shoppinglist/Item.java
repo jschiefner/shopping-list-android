@@ -3,6 +3,10 @@ package com.jschiefner.shoppinglist;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
@@ -51,5 +55,39 @@ public class Item {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public void toggle(boolean completed) {
+        this.completed = completed;
+        this.updatedAt = new Date();
+        ItemDatabase database = ItemDatabase.getInstance();
+        database.itemDao().update(this);
+    }
+
+    public void update(String newName) {
+        this.name = newName;
+        this.updatedAt = new Date();
+        ItemDatabase database = ItemDatabase.getInstance();
+        database.itemDao().update(this);
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("id", uuid);
+            json.put("name", name);
+            json.put("completed", completed);
+            json.put("createdAt", dateFormat.format(createdAt));
+            json.put("updatedAt", dateFormat.format(updatedAt));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return String.format("<Item> name: %s, id: %s", name, uuid);
     }
 }

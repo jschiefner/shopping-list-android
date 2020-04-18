@@ -34,8 +34,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ShoppingFragment extends Fragment {
     private RecyclerView recyclerView;
     private ItemViewModel itemViewModel;
-    final ItemViewAdapter adapter = new ItemViewAdapter();
-    FloatingActionButton fab;
+    private final ItemViewAdapter adapter = new ItemViewAdapter();
+    private FloatingActionButton fab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +67,7 @@ public class ShoppingFragment extends Fragment {
                 ItemViewAdapter.ItemViewHolder holder = (ItemViewAdapter.ItemViewHolder) viewHolder;
                 Item item = holder.item;
                 itemViewModel.delete(item);
+                ServerAPI.getInstance().delete(item, getContext());
             }
         }).attachToRecyclerView(recyclerView);
 
@@ -92,7 +93,7 @@ public class ShoppingFragment extends Fragment {
         final EditText itemNameInput = view.findViewById(R.id.new_text_text_input);
         Button saveButton = view.findViewById(R.id.new_text_button);
 
-        // set text in Thought Dialog
+        // set text in new Item Dialog
         topText.setText(R.string.new_item);
         saveButton.setText(R.string.button_save);
 
@@ -107,8 +108,7 @@ public class ShoppingFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Item item = new Item(itemNameInput.getText().toString());
-                itemViewModel.insert(item);
+                addItem(itemNameInput.getText().toString());
                 dialog.dismiss();
             }
         });
@@ -116,11 +116,16 @@ public class ShoppingFragment extends Fragment {
         itemNameInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                Item item = new Item(itemNameInput.getText().toString());
-                itemViewModel.insert(item);
+                addItem(itemNameInput.getText().toString());
                 dialog.dismiss();
                 return true;
             }
         });
+    }
+
+    private void addItem(String name) {
+        Item item = new Item(name);
+        itemViewModel.insert(item);
+        ServerAPI.getInstance().addItem(item, getContext());
     }
 }
