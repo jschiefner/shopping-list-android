@@ -1,12 +1,7 @@
 package com.jschiefner.shoppinglist;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +12,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.jschiefner.shoppinglist.database.Item;
+import com.jschiefner.shoppinglist.database.ItemViewAdapter;
+import com.jschiefner.shoppinglist.database.ItemViewModel;
+import com.jschiefner.shoppinglist.database.ItemViewModelFactory;
 
-import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;

@@ -1,7 +1,6 @@
-package com.jschiefner.shoppinglist;
+package com.jschiefner.shoppinglist.database;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -14,7 +13,6 @@ import androidx.room.TypeConverters;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
 
 @Entity
@@ -47,10 +45,6 @@ public class Item {
         this.uuid = UUID.fromString(uuid);
         try {
             this.createdAt = dateFormat.parse(createdAt);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        try {
             this.updatedAt = dateFormat.parse(updatedAt);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -60,15 +54,13 @@ public class Item {
     public void toggle(boolean completed) {
         this.completed = completed;
         this.updatedAt = new Date();
-        ItemDatabase database = ItemDatabase.getInstance();
-        database.itemDao().update(this);
+        ItemDatabase.getInstance().itemDao().update(this);
     }
 
     public void update(String newName) {
         this.name = newName;
         this.updatedAt = new Date();
-        ItemDatabase database = ItemDatabase.getInstance();
-        database.itemDao().update(this);
+        ItemDatabase.getInstance().itemDao().update(this);
     }
 
     public JSONObject toJson() {

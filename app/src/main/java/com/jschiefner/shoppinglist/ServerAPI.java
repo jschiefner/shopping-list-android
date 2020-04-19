@@ -3,11 +3,9 @@ package com.jschiefner.shoppinglist;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.gson.JsonObject;
+import com.jschiefner.shoppinglist.database.Item;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 

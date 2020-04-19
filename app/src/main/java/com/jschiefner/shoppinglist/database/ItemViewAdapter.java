@@ -1,4 +1,4 @@
-package com.jschiefner.shoppinglist;
+package com.jschiefner.shoppinglist.database;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,6 +11,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.jschiefner.shoppinglist.R;
+import com.jschiefner.shoppinglist.ServerAPI;
+
 import java.util.ArrayList;
 import java.util.List;
 

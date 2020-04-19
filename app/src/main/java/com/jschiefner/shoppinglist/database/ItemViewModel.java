@@ -1,4 +1,4 @@
-package com.jschiefner.shoppinglist;
+package com.jschiefner.shoppinglist.database;
 
 import android.app.Application;
 
@@ -7,7 +7,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ItemViewModel extends AndroidViewModel {
     private ItemRepository repository;

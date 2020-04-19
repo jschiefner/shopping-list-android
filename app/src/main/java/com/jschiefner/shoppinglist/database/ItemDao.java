@@ -1,4 +1,6 @@
-package com.jschiefner.shoppinglist;
+package com.jschiefner.shoppinglist.database;
+
+import com.jschiefner.shoppinglist.database.Item;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -8,7 +10,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.List;
-import java.util.UUID;
 
 @Dao
 public interface ItemDao {

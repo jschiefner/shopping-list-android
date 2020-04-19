@@ -1,16 +1,12 @@
 package com.jschiefner.shoppinglist;
-import android.os.AsyncTask;
 import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.jschiefner.shoppinglist.database.Item;
+import com.jschiefner.shoppinglist.database.ItemDatabase;
 
 import java.text.ParseException;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 
 public class CloudMessagingService extends FirebaseMessagingService {
     @Override
@@ -39,7 +35,7 @@ public class CloudMessagingService extends FirebaseMessagingService {
         final ItemDatabase database = ItemDatabase.getInstance(getApplicationContext());
         long updatedAt = 0;
         try {
-            updatedAt =  Item.dateFormat.parse(data.get("updatedAt")).getTime() / 1000L;
+            updatedAt = Item.dateFormat.parse(data.get("updatedAt")).getTime() / 1000L;
         } catch (ParseException e) {
             e.printStackTrace();
         }

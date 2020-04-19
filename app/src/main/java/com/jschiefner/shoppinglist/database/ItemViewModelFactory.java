@@ -1,4 +1,4 @@
-package com.jschiefner.shoppinglist;
+package com.jschiefner.shoppinglist.database;
 
 import android.app.Application;
 
