@@ -10,5 +10,20 @@
         android:name="com.jschiefner.shoppinglist.ShoppingFragment"
         android:label="@string/shopping_fragment_label"
         tools:layout="@layout/shopping_fragment">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/category_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/category_fragment"
+        android:name="com.jschiefner.shoppinglist.CategoryFragment"
+        android:label="@string/category_fragment_label"
+        tools:layout="@layout/category_fragment">
+
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>

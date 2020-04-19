@@ -4,6 +4,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
@@ -11,6 +12,9 @@ import androidx.room.Transaction;
 public interface CategoryDao {
     @Query("select * from category")
     LiveData<List<Category>> getAllCategories();
+
+    @Insert
+    long insert(Category category);
 
     @Transaction
     @Query("select * from category")

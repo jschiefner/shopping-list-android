@@ -2,6 +2,7 @@ package com.jschiefner.shoppinglist;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ public class ShoppingFragment extends Fragment {
     private ItemViewModel itemViewModel;
     private final ItemViewAdapter adapter = new ItemViewAdapter();
     private FloatingActionButton fab;
+    public static ShoppingFragment instance;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,7 +46,7 @@ public class ShoppingFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
-        // Setup Trip List
+        // Setup Item List
         itemViewModel = ViewModelProviders.of(this, new ItemViewModelFactory(getActivity().getApplication())).get(ItemViewModel.class);
         itemViewModel.getItems().observe(this, new Observer<List<Item>>() {
             @Override
@@ -81,6 +83,20 @@ public class ShoppingFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("CUSTOM", "onresume");
+        instance = this;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i("CUSTOM", "onpause");
+        instance = null;
     }
 
     public void handleFabClick() {
