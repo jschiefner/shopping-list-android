@@ -23,7 +23,14 @@
         tools:layout="@layout/category_fragment">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_category_to_rule"
+            app:destination="@id/rules_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/rules_fragment"
+        android:name="com.jschiefner.shoppinglist.RuleFragment"
+        android:label="@string/rule_fragment_label"
+        tools:layout="@layout/rule_fragment">
     </fragment>
 </navigation>

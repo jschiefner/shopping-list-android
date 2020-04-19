@@ -8,5 +8,6 @@
     <string name="new_item">New Item</string>
     <string name="button_save">Save</string>
     <string name="category_fragment_label">Category Fragment</string>
+    <string name="rule_fragment_label">Rule Fragment</string>
 
 </resources>

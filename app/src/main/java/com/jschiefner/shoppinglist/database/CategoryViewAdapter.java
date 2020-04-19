@@ -12,6 +12,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.jschiefner.shoppinglist.CategoryFragment;
+import com.jschiefner.shoppinglist.MainActivity;
 import com.jschiefner.shoppinglist.R;
 import com.jschiefner.shoppinglist.ServerAPI;
 
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CategoryViewAdapter extends RecyclerView.Adapter<CategoryViewAdapter.CategoryViewHolder> {
@@ -65,10 +68,19 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<CategoryViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
         Category currentCategory = categories.get(position);
         holder.textView.setText(currentCategory.name);
         holder.category = currentCategory;
+        holder.textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("(CUSTOM", "clicked!");
+                MainActivity mainActivity = (MainActivity) view.getContext();
+                mainActivity.setCategoryId(holder.category.id);
+                NavHostFragment.findNavController(CategoryFragment.instance).navigate(R.id.rules_fragment);
+            }
+        });
     }
 
     @Override

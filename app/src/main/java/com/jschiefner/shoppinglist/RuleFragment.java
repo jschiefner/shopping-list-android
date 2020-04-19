@@ -14,35 +14,36 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.jschiefner.shoppinglist.database.Category;
-import com.jschiefner.shoppinglist.database.CategoryViewAdapter;
-import com.jschiefner.shoppinglist.database.CategoryViewModel;
-import com.jschiefner.shoppinglist.database.CategoryViewModelFactory;
+import com.jschiefner.shoppinglist.database.Rule;
+import com.jschiefner.shoppinglist.database.RuleViewAdapter;
+import com.jschiefner.shoppinglist.database.RuleViewModel;
+import com.jschiefner.shoppinglist.database.RuleViewModelFactory;
 
 import java.util.List;
 
-public class CategoryFragment extends Fragment {
+public class RuleFragment extends Fragment {
     private RecyclerView recyclerView;
-    private CategoryViewModel categoryViewModel;
-    private final CategoryViewAdapter adapter = new CategoryViewAdapter();
+    private RuleViewModel ruleViewModel;
+    private final RuleViewAdapter adapter = new RuleViewAdapter();
     private FloatingActionButton fab;
-    public static CategoryFragment instance;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.category_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.rule_fragment, container, false);
 
-        recyclerView = rootView.findViewById(R.id.categories_recycler_view);
+        recyclerView = rootView.findViewById(R.id.rules_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
-        categoryViewModel = ViewModelProviders.of(this, new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
-        categoryViewModel.getCategories().observe(this, new Observer<List<Category>>() {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        long categoryId = mainActivity.getCategoryID();
+        ruleViewModel = ViewModelProviders.of(this, new RuleViewModelFactory(getActivity().getApplication(), categoryId)).get(RuleViewModel.class);
+        ruleViewModel.getCategoryRules().observe(this, new Observer<List<Rule>>() {
             @Override
-            public void onChanged(List<Category> categories) {
-                adapter.setCategories(categories);
+            public void onChanged(List<Rule> rules) {
+                adapter.setCategoryRules(rules);
             }
         });
 
@@ -59,20 +60,6 @@ public class CategoryFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i("CUSTOM", "onresume");
-        instance = this;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i("CUSTOM", "onpause");
-        instance = null;
     }
 
     public void handleFabClick() {
