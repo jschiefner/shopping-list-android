@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.jschiefner.shoppinglist.database.CategoryViewModel;
+import com.jschiefner.shoppinglist.database.CategoryViewModelFactory;
+import com.jschiefner.shoppinglist.database.CategoryWithItems;
 import com.jschiefner.shoppinglist.database.Item;
 import com.jschiefner.shoppinglist.database.ItemViewAdapter;
 import com.jschiefner.shoppinglist.database.ItemViewModel;
@@ -32,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ShoppingFragment extends Fragment {
     private RecyclerView recyclerView;
     private ItemViewModel itemViewModel;
+    private CategoryViewModel categoryViewModel;
     private final ItemViewAdapter adapter = new ItemViewAdapter();
     private FloatingActionButton fab;
     public static ShoppingFragment instance;
@@ -45,15 +49,11 @@ public class ShoppingFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
+        itemViewModel = ViewModelProviders.of(this, new ItemViewModelFactory(getActivity().getApplication())).get(ItemViewModel.class);
 
         // Setup Item List
-        itemViewModel = ViewModelProviders.of(this, new ItemViewModelFactory(getActivity().getApplication())).get(ItemViewModel.class);
-        itemViewModel.getItems().observe(this, new Observer<List<Item>>() {
-            @Override
-            public void onChanged(List<Item> items) {
-                adapter.setItems(items);
-            }
-        });
+        categoryViewModel = ViewModelProviders.of(this, new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
+        categoryViewModel.getCategoriesWithItems().observe(this, adapter::setCategoriesWithItems);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -71,12 +71,7 @@ public class ShoppingFragment extends Fragment {
         }).attachToRecyclerView(recyclerView);
 
         fab = getActivity().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleFabClick();
-            }
-        });
+        fab.setOnClickListener(view -> handleFabClick());
 
         return rootView;
     }

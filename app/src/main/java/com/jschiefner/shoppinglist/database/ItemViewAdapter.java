@@ -1,6 +1,7 @@
 package com.jschiefner.shoppinglist.database;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,11 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ItemViewAdapter extends RecyclerView.Adapter<ItemViewAdapter.ItemViewHolder> {
-    private List<Item> items = new ArrayList<>();
+    private List<CategoryWithItems> categoriesWithItems = new ArrayList<>();
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements TextView.OnEditorActionListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener {
         private CheckBox checkBox;
@@ -75,8 +76,8 @@ public class ItemViewAdapter extends RecyclerView.Adapter<ItemViewAdapter.ItemVi
         }
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public void setCategoriesWithItems(List<CategoryWithItems> categoriesWithItems) {
+        this.categoriesWithItems = categoriesWithItems;
         notifyDataSetChanged();
     }
 
@@ -89,14 +90,26 @@ public class ItemViewAdapter extends RecyclerView.Adapter<ItemViewAdapter.ItemVi
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Item currentItem = items.get(position);
-        holder.editText.setText(currentItem.name);
-        holder.item = currentItem;
-        holder.checkBox.setChecked(currentItem.completed);
+        int sizeCount = 0;
+        for (CategoryWithItems categoryWithItems : categoriesWithItems) {
+            int current = position - sizeCount;
+            if (current >= categoryWithItems.items.size()) {
+                sizeCount += categoryWithItems.items.size();
+                continue;
+            }
+
+            Item item = categoryWithItems.items.get(current);
+            holder.editText.setText(item.name);
+            holder.item = item;
+            holder.checkBox.setChecked(item.completed);
+            break;
+        }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public int getItemCount() {
-        return items.size();
+        int size = categoriesWithItems.stream().mapToInt(categoryWithItems -> categoryWithItems.items.size()).sum();
+        return size;
     }
 }

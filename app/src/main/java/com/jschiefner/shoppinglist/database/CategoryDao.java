@@ -19,4 +19,8 @@ public interface CategoryDao {
     @Transaction
     @Query("select * from category")
     List<CategoryWithRules> getCategoriesWithRules();
+
+    @Transaction
+    @Query("select * from category")
+    LiveData<List<CategoryWithItems>> getCategoriesWithItems();
 }
