@@ -5,6 +5,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.jschiefner.shoppinglist.database.Item;
 import com.jschiefner.shoppinglist.database.ItemDatabase;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.ParseException;
 import java.util.Map;
 
@@ -49,7 +51,7 @@ public class CloudMessagingService extends FirebaseMessagingService {
     }
 
     @Override
-    public void onNewToken(String token) {
+    public void onNewToken(@NotNull String token) {
         Log.i("CUSTOM", "Refreshed token: " + token);
         PreferenceManager.getInstance(getApplicationContext()).storeToken(token);
     }

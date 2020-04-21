@@ -6,7 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -15,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-@Entity
+@Entity(foreignKeys = @ForeignKey(entity = Category.class, parentColumns = "id", childColumns = "categoryId"))
 @TypeConverters({DateConverter.class, UUIDConverter.class})
 public class Item {
     @SuppressLint("SimpleDateFormat")
@@ -24,6 +26,9 @@ public class Item {
     @PrimaryKey(autoGenerate = true)
     public long id;
     public UUID uuid;
+
+    @ColumnInfo(index = true)
+    public Long categoryId;
 
     public String name;
     public boolean completed;

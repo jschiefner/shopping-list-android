@@ -42,7 +42,10 @@ public class ItemRepository {
 
         @Override
         protected Void doInBackground(Item... items) {
-            itemDao.insert(items[0]);
+            Item item = items[0];
+            Rule rule = ItemDatabase.getInstance().ruleDao().getRuleByName(item.name);
+            if (rule != null) item.categoryId = rule.categoryId;
+            itemDao.insert(item);
             return null;
         }
     }

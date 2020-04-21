@@ -16,6 +16,9 @@ public interface RuleDao {
     @Query("select * from rule where categoryId = :categoryId")
     LiveData<List<Rule>> getCategoryRules(long categoryId);
 
+    @Query("select * from rule where name like '%' || :name || '%'")
+    Rule getRuleByName(String name);
+
     @Insert
     long insert(Rule rule);
 
