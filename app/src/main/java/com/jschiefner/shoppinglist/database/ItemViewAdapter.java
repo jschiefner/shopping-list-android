@@ -21,10 +21,13 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.recyclerview.widget.RecyclerView;
+import kotlin.jvm.internal.Ref;
 
-public class ItemViewAdapter extends RecyclerView.Adapter<ItemViewAdapter.ItemViewHolder> {
+public class ItemViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<CategoryWithItems> categoriesWithItems = new ArrayList<>();
+    private Object[] listStore = new Object[0];
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements TextView.OnEditorActionListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener {
         private CheckBox checkBox;
@@ -76,40 +79,83 @@ public class ItemViewAdapter extends RecyclerView.Adapter<ItemViewAdapter.ItemVi
         }
     }
 
-    public void setCategoriesWithItems(List<CategoryWithItems> categoriesWithItems) {
-        this.categoriesWithItems = categoriesWithItems;
-        notifyDataSetChanged();
-    }
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private TextView textView;
 
-    @NonNull
-    @Override
-    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_view, parent, false);
-        return new ItemViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        int sizeCount = 0;
-        for (CategoryWithItems categoryWithItems : categoriesWithItems) {
-            int current = position - sizeCount;
-            if (current >= categoryWithItems.items.size()) {
-                sizeCount += categoryWithItems.items.size();
-                continue;
-            }
-
-            Item item = categoryWithItems.items.get(current);
-            holder.editText.setText(item.name);
-            holder.item = item;
-            holder.checkBox.setChecked(item.completed);
-            break;
+        public HeaderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(R.id.header_text_view);
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setCategoriesWithItems(List<CategoryWithItems> categoriesWithItems) {
+        this.categoriesWithItems = categoriesWithItems;
+        this.listStore = new Object[getItemCount()];
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) { // position: 5
+        // [OBST, [apfel, na, fe], GEMÜSE, [möhre, aro, kar]]
+        //   0       1     2   3      4        5    6    7
+        int temp = 0;
+        for (CategoryWithItems categoryWithItems : categoriesWithItems) {
+            int current = position - temp;
+            int next = temp + categoryWithItems.items.size() + 1;
+            if (position >= next) {
+                temp = next;
+                continue;
+            }
+
+            if (current == 0) {
+                Log.i("CUSTOM", "position: " + position + " header");
+                listStore[position] = categoryWithItems.category;
+                return R.layout.header_recycler_view;
+            } else {
+                Log.i("CUSTOM", "position: " + position + " item");
+                listStore[position] = categoryWithItems.items.get(current-1);
+                return R.layout.item_recycler_view;
+            }
+         }
+        Log.i("CUSTOM", "something went wrong!");
+        return -1;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == R.layout.header_recycler_view) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_recycler_view, parent, false);
+            return new HeaderViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_view, parent, false);
+            return new ItemViewHolder(view);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        if (viewHolder.getItemViewType() == R.layout.header_recycler_view) {
+            // Header View
+            HeaderViewHolder holder = (HeaderViewHolder) viewHolder;
+            Category category = (Category) listStore[position];
+            holder.textView.setText(category.name);
+        } else {
+            // Item View
+            ItemViewHolder holder = (ItemViewHolder) viewHolder;
+            Item item = (Item) listStore[position];
+            holder.editText.setText(item.name);
+            holder.item = item;
+            holder.checkBox.setChecked(item.completed);
+        }
+    }
+
     @Override
     public int getItemCount() {
-        int size = categoriesWithItems.stream().mapToInt(categoryWithItems -> categoryWithItems.items.size()).sum();
+//        int size = categoriesWithItems.stream().mapToInt(categoryWithItems -> categoryWithItems.items.size()).sum();
+        int size = categoriesWithItems.size();
+        for (CategoryWithItems categoryWithItems : categoriesWithItems) size += categoryWithItems.items.size();
         return size;
     }
 }
