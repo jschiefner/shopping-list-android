@@ -2,6 +2,7 @@ package com.jschiefner.shoppinglist;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.fragment.NavHostFragment;
@@ -49,5 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void setCategoryId(long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public void setActionBarTitle(int resId) {
+        getSupportActionBar().setTitle(resId);
     }
 }

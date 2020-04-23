@@ -23,6 +23,10 @@ public class CategoryRepository {
         new InsertCategoryTask(categoryDao).execute(category);
     }
 
+    public void delete(Category category) {
+        new DeleteCategoryTask(categoryDao).execute(category);
+    }
+
     public LiveData<List<Category>> getCategories() {
         return categories;
     }
@@ -41,6 +45,21 @@ public class CategoryRepository {
         @Override
         protected Void doInBackground(Category... categories) {
             categoryDao.insert(categories[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteCategoryTask extends AsyncTask<Category, Void, Void> {
+        private CategoryDao categoryDao;
+
+        private DeleteCategoryTask(CategoryDao categoryDao) {
+            this.categoryDao = categoryDao;
+        }
+
+        @Override
+        protected Void doInBackground(Category... categories) {
+            Category category = categories[0];
+            categoryDao.delete(category);
             return null;
         }
     }

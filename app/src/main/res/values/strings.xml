@@ -1,13 +1,15 @@
 <resources>
     <string name="app_name">Shopping List</string>
     <string name="action_settings">Settings</string>
+
     <!-- Strings used for fragments for navigation -->
-    <string name="shopping_fragment_label">Shopping Fragment</string>
+    <string name="shopping_fragment_label">Shopping List</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="new_item">New Item</string>
+    <string name="new_category">New Category</string>
+    <string name="new_rule">New Rule</string>
     <string name="button_save">Save</string>
-    <string name="category_fragment_label">Category Fragment</string>
-    <string name="rule_fragment_label">Rule Fragment</string>
-
+    <string name="category_fragment_label">Categories</string>
+    <string name="rule_fragment_label">Rules</string>
 </resources>

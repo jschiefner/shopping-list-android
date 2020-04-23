@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,10 +41,15 @@ public class ShoppingFragment extends Fragment {
     private FloatingActionButton fab;
     public static ShoppingFragment instance;
 
+    private final int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.shopping_fragment, container, false);
+
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.setActionBarTitle(R.string.shopping_fragment_label);
 
         recyclerView = rootView.findViewById(R.id.items_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -55,10 +61,16 @@ public class ShoppingFragment extends Fragment {
         categoryViewModel = ViewModelProviders.of(this, new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
         categoryViewModel.getCategoriesWithItems().observe(this, adapter::setCategoriesWithItems);
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, swipeFlags) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
+            }
+
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                if (viewHolder instanceof ItemViewAdapter.ItemViewHolder) return makeMovementFlags(0, swipeFlags);
+                else return makeMovementFlags(0, 0);
             }
 
             @Override
@@ -109,25 +121,18 @@ public class ShoppingFragment extends Fragment {
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         itemNameInput.requestFocus();
-        InputMethodManager imm = (InputMethodManager) itemNameInput.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(itemNameInput.getWindowToken(), 0);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addItem(itemNameInput.getText().toString());
-                dialog.dismiss();
-            }
+        saveButton.setOnClickListener(view1 -> {
+            addItem(itemNameInput.getText().toString());
+            dialog.dismiss();
         });
 
-        itemNameInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                addItem(itemNameInput.getText().toString());
-                dialog.dismiss();
-                return true;
-            }
+        itemNameInput.setOnEditorActionListener((textView, i, keyEvent) -> {
+            addItem(itemNameInput.getText().toString());
+            dialog.dismiss();
+            return true;
         });
     }
 

@@ -14,4 +14,9 @@ public class Rule {
 
     @ColumnInfo(index = true)
     public long categoryId;
+
+    public Rule(String name, long categoryId) {
+        this.name = name;
+        this.categoryId = categoryId;
+    }
 }

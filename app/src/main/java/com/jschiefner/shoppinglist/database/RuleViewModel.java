@@ -22,6 +22,10 @@ public class RuleViewModel extends AndroidViewModel {
         repository.insert(rule);
     }
 
+    public void delete(Rule rule) {
+        repository.delete(rule);
+    }
+
     public LiveData<List<Rule>> getCategoryRules() {
         return categoryRules;
     }

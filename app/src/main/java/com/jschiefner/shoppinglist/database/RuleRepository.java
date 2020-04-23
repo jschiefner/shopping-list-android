@@ -2,6 +2,7 @@ package com.jschiefner.shoppinglist.database;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.widget.RelativeLayout;
 
 import androidx.lifecycle.LiveData;
 
@@ -21,6 +22,10 @@ public class RuleRepository {
         new InsertRuleTask(ruleDao).execute(rule);
     }
 
+    public void delete(Rule rule) {
+        new DeleteRuleTask(ruleDao).execute(rule);
+    }
+
     public LiveData<List<Rule>> getCategoryRules() {
         return categoryRules;
     }
@@ -35,6 +40,20 @@ public class RuleRepository {
         @Override
         protected Void doInBackground(Rule... rules) {
             ruleDao.insert(rules[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteRuleTask extends AsyncTask<Rule, Void, Void> {
+        private RuleDao ruleDao;
+
+        private DeleteRuleTask(RuleDao ruleDao) {
+            this.ruleDao = ruleDao;
+        }
+
+        @Override
+        protected Void doInBackground(Rule... rules) {
+            ruleDao.delete(rules[0]);
             return null;
         }
     }

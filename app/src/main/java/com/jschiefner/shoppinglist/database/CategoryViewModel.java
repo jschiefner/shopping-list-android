@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 
 public class CategoryViewModel extends AndroidViewModel {
     private CategoryRepository repository;
@@ -23,6 +24,10 @@ public class CategoryViewModel extends AndroidViewModel {
 
     public void insert(Category category) {
         repository.insert(category);
+    }
+
+    public void delete(Category category) {
+        repository.delete(category);
     }
 
     public LiveData<List<Category>> getCategories() {
