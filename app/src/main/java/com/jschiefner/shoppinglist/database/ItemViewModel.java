@@ -22,8 +22,16 @@ public class ItemViewModel extends AndroidViewModel {
         repository.insert(item);
     }
 
+    public void update(Item item) {
+        repository.update(item);
+    }
+
     public void delete(Item item) {
         repository.delete(item);
+    }
+
+    public void deleteCompleted() {
+        repository.deleteCompleted();
     }
 
     public LiveData<List<Item>> getItems() {

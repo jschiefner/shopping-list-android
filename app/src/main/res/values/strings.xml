@@ -12,4 +12,5 @@
     <string name="button_save">Save</string>
     <string name="category_fragment_label">Categories</string>
     <string name="rule_fragment_label">Rules</string>
+    <string name="delete_completed">Delete Completed</string>
 </resources>

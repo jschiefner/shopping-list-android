@@ -1,7 +1,5 @@
 package com.jschiefner.shoppinglist.database;
 
-import com.jschiefner.shoppinglist.database.Item;
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -22,11 +20,14 @@ public interface ItemDao {
     @Query("select * from item where id = :uuid")
     LiveData<Item> getItem(String uuid);
 
+    @Query("delete from item where completed = 1")
+    void deleteCompleted();
+
     @Insert
     long insert(Item item);
 
     @Update
-    int update(Item item);
+    void update(Item item);
 
     @Query("update item set name = :name, completed = :completed, updatedAt = :updatedAt where uuid = :uuid")
     int update(String uuid, String name, boolean completed, long updatedAt);

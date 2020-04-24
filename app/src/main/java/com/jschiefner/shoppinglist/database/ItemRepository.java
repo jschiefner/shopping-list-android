@@ -21,8 +21,16 @@ public class ItemRepository {
         new InsertItemAsyncTask(itemDao).execute(item);
     }
 
+    public void update(Item item) {
+        new UpdateItemAsyncTask(itemDao).execute(item);
+    }
+
     public void delete(Item item) {
         new DeleteItemAsyncTask(itemDao).execute(item);
+    }
+
+    public void deleteCompleted() {
+        new DeleteCompletedTask(itemDao).execute();
     }
 
     public LiveData<List<Item>> getItems() {
@@ -50,6 +58,20 @@ public class ItemRepository {
         }
     }
 
+    private static class UpdateItemAsyncTask extends AsyncTask<Item, Void, Void> {
+        private ItemDao itemDao;
+
+        private UpdateItemAsyncTask(ItemDao itemDao) {
+            this.itemDao = itemDao;
+        }
+
+        @Override
+        protected Void doInBackground(Item... items) {
+            itemDao.update(items[0]);
+            return null;
+        }
+    }
+
     private static class DeleteItemAsyncTask extends AsyncTask<Item, Void, Void> {
         private ItemDao itemDao;
 
@@ -60,6 +82,20 @@ public class ItemRepository {
         @Override
         protected Void doInBackground(Item... items) {
             itemDao.delete(items[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteCompletedTask extends AsyncTask<Void, Void, Void> {
+        private ItemDao itemDao;
+
+        private DeleteCompletedTask(ItemDao itemDao) {
+            this.itemDao = itemDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            itemDao.deleteCompleted();
             return null;
         }
     }

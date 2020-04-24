@@ -59,13 +59,11 @@ public class Item {
     public void toggle(boolean completed) {
         this.completed = completed;
         this.updatedAt = new Date();
-        ItemDatabase.getInstance().itemDao().update(this);
     }
 
     public void update(String newName) {
         this.name = newName;
         this.updatedAt = new Date();
-        ItemDatabase.getInstance().itemDao().update(this);
     }
 
     public JSONObject toJson() {

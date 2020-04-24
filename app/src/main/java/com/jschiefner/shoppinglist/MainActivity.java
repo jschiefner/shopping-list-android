@@ -2,7 +2,6 @@ package com.jschiefner.shoppinglist;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.fragment.NavHostFragment;
@@ -33,12 +32,14 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            if (ShoppingFragment.instance != null) NavHostFragment.findNavController(ShoppingFragment.instance).navigate(R.id.category_fragment);
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                if (ShoppingFragment.instance != null) NavHostFragment.findNavController(ShoppingFragment.instance).navigate(R.id.category_fragment);
+                return true;
+            case R.id.action_delete_completed:
+                if (ShoppingFragment.instance != null) ShoppingFragment.instance.itemViewModel.deleteCompleted();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

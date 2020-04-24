@@ -1,7 +1,10 @@
 package com.jschiefner.shoppinglist.database;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Build;
+import android.text.SpannableString;
+import android.text.style.StrikethroughSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -15,19 +18,20 @@ import android.widget.TextView;
 
 import com.jschiefner.shoppinglist.R;
 import com.jschiefner.shoppinglist.ServerAPI;
+import com.jschiefner.shoppinglist.ShoppingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.view.menu.MenuView;
 import androidx.recyclerview.widget.RecyclerView;
-import kotlin.jvm.internal.Ref;
 
 public class ItemViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<CategoryWithItems> categoriesWithItems = new ArrayList<>();
     private Object[] listStore = new Object[0];
+    private ColorStateList defaultTextColor;
+    private ColorStateList defaultCheckboxColor;
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements TextView.OnEditorActionListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener {
         private CheckBox checkBox;
@@ -52,6 +56,7 @@ public class ItemViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (!item.name.equals(editText.getText().toString())) {
                 Log.i("CUSTOM", "updated (pressed done): " + item);
                 item.update(editText.getText().toString());
+                ShoppingFragment.instance.itemViewModel.update(item);
                 ServerAPI.getInstance().update(item, editText.getContext());
             }
 
@@ -65,6 +70,7 @@ public class ItemViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (!item.name.equals(editText.getText().toString())) {
                 Log.i("CUSTOM", "updated (changed focus): " + item);
                 item.update(editText.getText().toString());
+                ShoppingFragment.instance.itemViewModel.update(item);
                 ServerAPI.getInstance().update(item, editText.getContext());
             }
 
@@ -75,6 +81,7 @@ public class ItemViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (!compoundButton.isPressed()) return;
             Log.i("CUSTOM", "checked: " + item + value);
             item.toggle(value);
+            ShoppingFragment.instance.itemViewModel.update(item);
             ServerAPI.getInstance().update(item, compoundButton.getContext());
         }
     }
@@ -145,7 +152,19 @@ public class ItemViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             // Item View
             ItemViewHolder holder = (ItemViewHolder) viewHolder;
             Item item = (Item) listStore[position];
-            holder.editText.setText(item.name);
+            if (item.completed) {
+                SpannableString spannableString = new SpannableString(item.name);
+                spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), 0);
+                holder.editText.setText(spannableString);
+                holder.editText.setTextColor(holder.editText.getContext().getResources().getColor(R.color.gray));
+                holder.checkBox.setButtonTintList(ColorStateList.valueOf(holder.editText.getContext().getResources().getColor(R.color.green_gray_checkbox)));
+                holder.editText.setBackgroundTintList(ColorStateList.valueOf(holder.editText.getContext().getResources().getColor(R.color.green_gray_checkbox)));
+            } else {
+                holder.editText.setText(item.name);
+                holder.editText.setTextColor(holder.editText.getContext().getResources().getColor(R.color.gray_default_edittext));
+                holder.checkBox.setButtonTintList(ColorStateList.valueOf(holder.editText.getContext().getResources().getColor(R.color.gray_default_checkbox)));
+                holder.editText.setBackgroundTintList(ColorStateList.valueOf(holder.editText.getContext().getResources().getColor(R.color.colorPrimary)));
+            }
             holder.item = item;
             holder.checkBox.setChecked(item.completed);
         }

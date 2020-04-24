@@ -35,7 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ShoppingFragment extends Fragment {
     private RecyclerView recyclerView;
-    private ItemViewModel itemViewModel;
+    public ItemViewModel itemViewModel;
     private CategoryViewModel categoryViewModel;
     private final ItemViewAdapter adapter = new ItemViewAdapter();
     private FloatingActionButton fab;
