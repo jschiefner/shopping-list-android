@@ -26,6 +26,10 @@ public class RuleRepository {
         new DeleteRuleTask(ruleDao).execute(rule);
     }
 
+    public void queryRuleWithCategory(String name, Category category, QueryHandler handler) {
+        new QueryRuleWithCategoryTask(ruleDao, name, category, handler).execute();
+    }
+
     public LiveData<List<Rule>> getCategoryRules() {
         return categoryRules;
     }
@@ -55,6 +59,32 @@ public class RuleRepository {
         protected Void doInBackground(Rule... rules) {
             ruleDao.delete(rules[0]);
             return null;
+        }
+    }
+
+    private static class QueryRuleWithCategoryTask extends AsyncTask<Void, Void, Void> {
+        private RuleDao ruleDao;
+        private String name;
+        private Category category;
+        private QueryHandler handler;
+        private Rule rule;
+
+        private QueryRuleWithCategoryTask(RuleDao ruleDao, String name, Category category, QueryHandler handler) {
+            this.ruleDao = ruleDao;
+            this.name = name;
+            this.category = category;
+            this.handler = handler;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            rule = ruleDao.getRuleByNameAndCategory(name, category.id);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            handler.handle(rule);
         }
     }
 }

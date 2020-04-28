@@ -41,6 +41,10 @@ public class ItemRepository {
         return itemDao.getItem(id);
     }
 
+    public LiveData<List<Item>> getUncategorizedItems() {
+        return itemDao.getUncategorizedItems();
+    }
+
     private static class InsertItemAsyncTask extends AsyncTask<Item, Void, Void> {
         private ItemDao itemDao;
 

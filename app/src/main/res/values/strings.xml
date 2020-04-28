@@ -13,4 +13,8 @@
     <string name="category_fragment_label">Categories</string>
     <string name="rule_fragment_label">Rules</string>
     <string name="delete_completed">Delete Completed</string>
+    <string name="uncategorized_items">Uncategorized</string>
+    <string name="edit_item_head">Edit Item</string>
+    <string name="category_tag">Category:</string>
+    <string name="item_tag">Item:</string>
 </resources>

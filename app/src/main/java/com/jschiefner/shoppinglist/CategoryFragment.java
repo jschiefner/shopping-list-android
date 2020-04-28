@@ -1,13 +1,11 @@
 package com.jschiefner.shoppinglist;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,9 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,10 +23,6 @@ import com.jschiefner.shoppinglist.database.Category;
 import com.jschiefner.shoppinglist.database.CategoryViewAdapter;
 import com.jschiefner.shoppinglist.database.CategoryViewModel;
 import com.jschiefner.shoppinglist.database.CategoryViewModelFactory;
-import com.jschiefner.shoppinglist.database.Item;
-import com.jschiefner.shoppinglist.database.ItemViewAdapter;
-
-import java.util.List;
 
 public class CategoryFragment extends Fragment {
     private RecyclerView recyclerView;

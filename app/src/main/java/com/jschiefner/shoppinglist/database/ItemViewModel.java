@@ -41,4 +41,8 @@ public class ItemViewModel extends AndroidViewModel {
     public LiveData<Item> getItem(long id) {
         return repository.getItem(id);
     }
+
+    public LiveData<List<Item>> getUncategorizedItems() {
+        return repository.getUncategorizedItems();
+    }
 }

@@ -20,6 +20,9 @@ public interface ItemDao {
     @Query("select * from item where id = :uuid")
     LiveData<Item> getItem(String uuid);
 
+    @Query("select * from item where categoryId is null")
+    LiveData<List<Item>> getUncategorizedItems();
+
     @Query("delete from item where completed = 1")
     void deleteCompleted();
 

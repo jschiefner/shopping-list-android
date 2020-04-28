@@ -27,64 +27,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ItemViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<CategoryWithItems> categoriesWithItems = new ArrayList<>();
+public class CategoryItemViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public List<CategoryWithItems> categoriesWithItems = new ArrayList<>();
     private Object[] listStore = new Object[0];
-    private ColorStateList defaultTextColor;
-    private ColorStateList defaultCheckboxColor;
-
-    public static class ItemViewHolder extends RecyclerView.ViewHolder implements TextView.OnEditorActionListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener {
-        private CheckBox checkBox;
-        private EditText editText;
-        public Item item;
-
-        public ItemViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            checkBox = itemView.findViewById(R.id.checkbox);
-            checkBox.setOnCheckedChangeListener(this);
-            editText = itemView.findViewById(R.id.recycler_edit_text);
-            editText.setOnEditorActionListener(this);
-            editText.setOnFocusChangeListener(this);
-        }
-
-        @Override
-        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-            Log.i("CUSTOM", textView.getText().toString());
-            InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-            if (!item.name.equals(editText.getText().toString())) {
-                Log.i("CUSTOM", "updated (pressed done): " + item);
-                item.update(editText.getText().toString());
-                ShoppingFragment.instance.itemViewModel.update(item);
-                ServerAPI.getInstance().update(item, editText.getContext());
-            }
-
-            return true;
-        }
-
-        @Override
-        public void onFocusChange(View view, boolean hasFocus) {
-            if (hasFocus) return;
-
-            if (!item.name.equals(editText.getText().toString())) {
-                Log.i("CUSTOM", "updated (changed focus): " + item);
-                item.update(editText.getText().toString());
-                ShoppingFragment.instance.itemViewModel.update(item);
-                ServerAPI.getInstance().update(item, editText.getContext());
-            }
-
-        }
-
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean value) {
-            if (!compoundButton.isPressed()) return;
-            Log.i("CUSTOM", "checked: " + item + value);
-            item.toggle(value);
-            ShoppingFragment.instance.itemViewModel.update(item);
-            ServerAPI.getInstance().update(item, compoundButton.getContext());
-        }
-    }
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;

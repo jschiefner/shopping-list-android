@@ -1,9 +1,7 @@
 package com.jschiefner.shoppinglist;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -14,21 +12,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.jschiefner.shoppinglist.database.Item;
-import com.jschiefner.shoppinglist.database.ItemViewAdapter;
 import com.jschiefner.shoppinglist.database.Rule;
 import com.jschiefner.shoppinglist.database.RuleViewAdapter;
 import com.jschiefner.shoppinglist.database.RuleViewModel;
 import com.jschiefner.shoppinglist.database.RuleViewModelFactory;
-
-import java.util.List;
 
 public class RuleFragment extends Fragment {
     private RecyclerView recyclerView;
