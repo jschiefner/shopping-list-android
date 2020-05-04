@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jschiefner.shoppinglist.database.Category;
@@ -134,7 +135,28 @@ public class ShoppingFragment extends Fragment {
         dialog.show();
 
         saveButton.setOnClickListener(view1 -> {
-            addItem(itemNameInput.getText().toString());
+            // addItem(itemNameInput.getText().toString());
+            String newItemName = itemNameInput.getText().toString();
+            if (newItemName.isEmpty()) {
+                Toast.makeText(getContext(), "Please fill out the Item Name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int size = categories.size();
+            int position = spinner.getSelectedItemPosition();
+            if (position == size-1) { // New
+                String newCategoryName = newCategoryEdit.getText().toString();
+                if (newCategoryName.isEmpty()) {
+                    Toast.makeText(getContext(), "Please fill out the new Category or select another Category Option", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                itemViewModel.insert(new Item(newItemName), new Category(newCategoryName), ruleDeleteCheckbox.isChecked(), ruleAddCheckbox.isChecked());
+            } else if (position == size-2) { // None
+                itemViewModel.insert(new Item(newItemName));
+            } else { // existing Category
+                Category category = getCategoryByPosition(position);
+                itemViewModel.insert(new Item(newItemName, category.id));
+                if (ruleDeleteCheckbox.isChecked()) ruleViewModel.delete(newItemName);
+            }
             dialog.dismiss();
         });
 
@@ -154,6 +176,10 @@ public class ShoppingFragment extends Fragment {
         newCategoryEdit.setOnEditorActionListener((textView, i, keyEvent) -> {
             String newItemName = itemNameInput.getText().toString();
             String newCategoryName = newCategoryEdit.getText().toString();
+            ruleAddCheckbox.setVisibility(View.VISIBLE);
+            ruleAddCheckbox.setChecked(true);
+            ruleAddText.setVisibility(View.VISIBLE);
+            ruleAddText.setText(String.format("%s > %s", newItemName, newCategoryName));
             ruleViewModel.getRuleWithCategory(newItemName, object -> {
                 RuleWithCategory ruleWithCategory = (RuleWithCategory) object;
                 if (ruleWithCategory == null) return;
@@ -167,10 +193,6 @@ public class ShoppingFragment extends Fragment {
                 ruleDeleteText.setText(spannableString);
                 ruleDeleteText.setVisibility(View.VISIBLE);
 
-                ruleAddCheckbox.setVisibility(View.VISIBLE);
-                ruleAddCheckbox.setChecked(true);
-                ruleAddText.setVisibility(View.VISIBLE);
-                ruleAddText.setText(String.format("%s > %s", newItemName, newCategoryName));
             });
             return true;
         });
@@ -183,7 +205,11 @@ public class ShoppingFragment extends Fragment {
                 int size = categories.size();
                 if (position == size-1) { // New
                     newCategoryText.setVisibility(View.VISIBLE);
+                    newCategoryEdit.setText("");
                     newCategoryEdit.setVisibility(View.VISIBLE);
+                    ruleAddCheckbox.setVisibility(View.GONE);
+                    ruleAddText.setVisibility(View.GONE);
+
                 } else if (position == size-2){ // None
                     newCategoryText.setVisibility(View.GONE);
                     newCategoryEdit.setVisibility(View.GONE);
@@ -208,14 +234,18 @@ public class ShoppingFragment extends Fragment {
 
                     ruleViewModel.getRuleWithCategory(newItemName, object -> {
                         RuleWithCategory ruleWithCategory = (RuleWithCategory) object;
-                        if (ruleWithCategory == null) return;
-                        Rule rule = ruleWithCategory.rule;
-                        Category categoryByRule = ruleWithCategory.category;
                         Category categorySelected = getCategoryByPosition(position);
 
-                        if (categoryByRule.id != categorySelected.id) {
+                        if (ruleWithCategory == null) {
+                            ruleDeleteCheckbox.setVisibility(View.GONE);
+                            ruleDeleteText.setVisibility(View.GONE);
+                            ruleAddCheckbox.setChecked(true);
+                            ruleAddCheckbox.setVisibility(View.VISIBLE);
+                            ruleAddText.setText(String.format("%s > %s", newItemName, categorySelected.name));
+                            ruleAddText.setVisibility(View.VISIBLE);
+                        } else if (ruleWithCategory.category.id != categorySelected.id) {
                             ruleDeleteCheckbox.setChecked(true);
-                            SpannableString spannableString = new SpannableString(String.format("%s -> %s", rule.name, categoryByRule.name));
+                            SpannableString spannableString = new SpannableString(String.format("%s -> %s", ruleWithCategory.rule.name, ruleWithCategory.category.name));
                             spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), 0);
                             ruleDeleteCheckbox.setVisibility(View.VISIBLE);
                             ruleDeleteText.setText(spannableString);
@@ -242,12 +272,6 @@ public class ShoppingFragment extends Fragment {
         });
     }
 
-    private void addItem(String name) {
-        if (name.isEmpty()) return;
-        Item item = new Item(name);
-        itemViewModel.insert(item);
-        ServerAPI.getInstance().addItem(item, getContext());
-    }
 
     public void editItemDialog(Item item) {
         // create editItem dialog

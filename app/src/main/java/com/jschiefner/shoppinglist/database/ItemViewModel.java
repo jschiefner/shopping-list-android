@@ -22,6 +22,10 @@ public class ItemViewModel extends AndroidViewModel {
         repository.insert(item);
     }
 
+    public void insert(Item item, Category category, boolean deleteRule, boolean addRule) {
+        repository.insert(item, category, deleteRule, addRule);
+    }
+
     public void update(Item item) {
         repository.update(item);
     }

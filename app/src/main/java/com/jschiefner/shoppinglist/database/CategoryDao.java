@@ -18,7 +18,7 @@ public interface CategoryDao {
     Category getCategoryByRuleName(String name);
 
     @Insert
-    long insert(Category category);
+    Long insert(Category category);
 
     @Delete
     void delete(Category category);

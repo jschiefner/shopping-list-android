@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -37,6 +38,18 @@ public class Item {
 
     public Item(String name) {
         this.name = name;
+        this.uuid = UUID.randomUUID();
+        this.completed = false;
+
+        Date now = new Date();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @Ignore
+    public Item(String name, Long categoryId) {
+        this.name = name;
+        this.categoryId = categoryId;
         this.uuid = UUID.randomUUID();
         this.completed = false;
 

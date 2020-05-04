@@ -29,4 +29,7 @@ public interface RuleDao {
 
     @Delete
     int delete(Rule rule);
+
+    @Query("delete from rule where name like '%' || :name || '%'")
+    void delete(String name);
 }

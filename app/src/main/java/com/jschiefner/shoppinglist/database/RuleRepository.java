@@ -25,6 +25,10 @@ public class RuleRepository {
         new DeleteRuleTask(ruleDao).execute(rule);
     }
 
+    public void delete(String itemName) {
+        new DeleteRuleByNameTask(ruleDao).execute(itemName);
+    }
+
     public void getRuleWithCategory(String name, QueryHandler handler) {
         new QueryRuleWithCategoryTask(ruleDao, name, handler).execute();
     }
@@ -57,6 +61,20 @@ public class RuleRepository {
         @Override
         protected Void doInBackground(Rule... rules) {
             ruleDao.delete(rules[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteRuleByNameTask extends AsyncTask<String, Void, Void> {
+        private RuleDao ruleDao;
+
+        private DeleteRuleByNameTask(RuleDao ruleDao) {
+            this.ruleDao = ruleDao;
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            ruleDao.delete(strings[0]);
             return null;
         }
     }
