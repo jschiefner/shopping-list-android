@@ -7,6 +7,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 @Dao
 public interface RuleDao {
@@ -19,8 +20,9 @@ public interface RuleDao {
     @Query("select * from rule where name like '%' || :name || '%'")
     Rule getRuleByName(String name);
 
-    @Query("select * from rule where name like '%' || :name || '%' and categoryId = :categoryId")
-    Rule getRuleByNameAndCategory(String name, Long categoryId);
+    @Transaction
+    @Query("select * from rule where name like '%' || :name || '%'")
+    RuleWithCategory getRuleWithCategory(String name);
 
     @Insert
     long insert(Rule rule);

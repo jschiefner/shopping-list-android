@@ -14,6 +14,9 @@ public interface CategoryDao {
     @Query("select * from category")
     LiveData<List<Category>> getAllCategories();
 
+    @Query("select category.id, category.name from category join rule on category.id = rule.categoryId where rule.name like '%' || :name || '%'")
+    Category getCategoryByRuleName(String name);
+
     @Insert
     long insert(Category category);
 

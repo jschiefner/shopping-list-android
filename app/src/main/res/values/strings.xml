@@ -16,5 +16,6 @@
     <string name="uncategorized_items">Uncategorized</string>
     <string name="edit_item_head">Edit Item</string>
     <string name="category_tag">Category:</string>
-    <string name="item_tag">Item:</string>
+    <string name="item_tag">Name:</string>
+    <string name="new_category_text">New Category:</string>
 </resources>

@@ -10,4 +10,5 @@
     <color name="gray_default_checkbox">#626262</color>
     <color name="green_gray_checkbox">#4F53AB08</color>
     <color name="gray_default_edittext">#474747</color>
+    <color name="red">#EB1000</color>
 </resources>

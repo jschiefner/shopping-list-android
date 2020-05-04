@@ -1,6 +1,7 @@
 package com.jschiefner.shoppinglist.database;
 
 import android.app.Application;
+import android.app.DownloadManager;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -26,8 +27,8 @@ public class RuleViewModel extends AndroidViewModel {
         repository.delete(rule);
     }
 
-    public void getRuleWithCategory(String name, Category category, QueryHandler handler) {
-        repository.queryRuleWithCategory(name, category, handler);
+    public void getRuleWithCategory(String name, QueryHandler handler) {
+        repository.getRuleWithCategory(name, handler);
     }
 
     public LiveData<List<Rule>> getCategoryRules() {

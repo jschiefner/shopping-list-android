@@ -30,6 +30,10 @@ public class CategoryViewModel extends AndroidViewModel {
         repository.delete(category);
     }
 
+    public void getCategoryByRuleName(String name, QueryHandler handler) {
+        repository.getCategoryByRuleName(name, handler);
+    }
+
     public LiveData<List<Category>> getCategories() {
         return categories;
     }

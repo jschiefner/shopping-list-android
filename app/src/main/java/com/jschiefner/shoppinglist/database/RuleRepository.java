@@ -2,7 +2,6 @@ package com.jschiefner.shoppinglist.database;
 
 import android.app.Application;
 import android.os.AsyncTask;
-import android.widget.RelativeLayout;
 
 import androidx.lifecycle.LiveData;
 
@@ -26,8 +25,8 @@ public class RuleRepository {
         new DeleteRuleTask(ruleDao).execute(rule);
     }
 
-    public void queryRuleWithCategory(String name, Category category, QueryHandler handler) {
-        new QueryRuleWithCategoryTask(ruleDao, name, category, handler).execute();
+    public void getRuleWithCategory(String name, QueryHandler handler) {
+        new QueryRuleWithCategoryTask(ruleDao, name, handler).execute();
     }
 
     public LiveData<List<Rule>> getCategoryRules() {
@@ -65,26 +64,24 @@ public class RuleRepository {
     private static class QueryRuleWithCategoryTask extends AsyncTask<Void, Void, Void> {
         private RuleDao ruleDao;
         private String name;
-        private Category category;
         private QueryHandler handler;
-        private Rule rule;
+        private RuleWithCategory ruleWithCategory;
 
-        private QueryRuleWithCategoryTask(RuleDao ruleDao, String name, Category category, QueryHandler handler) {
+        private QueryRuleWithCategoryTask(RuleDao ruleDao, String name, QueryHandler handler) {
             this.ruleDao = ruleDao;
             this.name = name;
-            this.category = category;
             this.handler = handler;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            rule = ruleDao.getRuleByNameAndCategory(name, category.id);
+            ruleWithCategory = ruleDao.getRuleWithCategory(name);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            handler.handle(rule);
+            handler.handle(ruleWithCategory);
         }
     }
 }

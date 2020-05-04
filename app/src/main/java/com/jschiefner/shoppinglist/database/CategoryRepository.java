@@ -27,6 +27,10 @@ public class CategoryRepository {
         new DeleteCategoryTask(categoryDao).execute(category);
     }
 
+    public void getCategoryByRuleName(String name, QueryHandler handler) {
+        new GetCategoryByRuleNameTask(categoryDao, name, handler).execute();
+    }
+
     public LiveData<List<Category>> getCategories() {
         return categories;
     }
@@ -61,6 +65,30 @@ public class CategoryRepository {
             Category category = categories[0];
             categoryDao.delete(category);
             return null;
+        }
+    }
+
+    private static class GetCategoryByRuleNameTask extends AsyncTask<Void, Void, Void> {
+        private CategoryDao categoryDao;
+        private String name;
+        private QueryHandler handler;
+        private Category category;
+
+        private GetCategoryByRuleNameTask(CategoryDao categoryDao, String name, QueryHandler handler) {
+            this.categoryDao = categoryDao;
+            this.name = name;
+            this.handler = handler;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            category = categoryDao.getCategoryByRuleName(name);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            handler.handle(category);
         }
     }
 }
