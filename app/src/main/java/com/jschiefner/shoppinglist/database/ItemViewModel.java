@@ -30,6 +30,10 @@ public class ItemViewModel extends AndroidViewModel {
         repository.update(item);
     }
 
+    public void update(Item item, Category category, Rule ruleToDelete, boolean deleteRule, boolean addRule) {
+        repository.update(item, category, ruleToDelete, deleteRule, addRule);
+    }
+
     public void delete(Item item) {
         repository.delete(item);
     }

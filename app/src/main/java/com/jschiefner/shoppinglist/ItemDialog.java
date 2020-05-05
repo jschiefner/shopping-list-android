@@ -34,7 +34,7 @@ import java.util.List;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
 
-public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
+public class ItemDialog implements View.OnClickListener, Spinner.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
     public ItemViewModel itemViewModel;
     private CategoryViewModel categoryViewModel;
     private RuleViewModel ruleViewModel;
@@ -52,27 +52,29 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
     private AlertDialog.Builder builder;
     private List<String> categories;
     private AlertDialog dialog;
+    private View layout;
 
+    private Item itemToEdit;
     private Rule ruleToDelete;
 
-    public NewItemDialog() {
+    public ItemDialog() {
         itemViewModel = ViewModelProviders.of(ShoppingFragment.instance, new ItemViewModelFactory(ShoppingFragment.instance.getActivity().getApplication())).get(ItemViewModel.class);
         categoryViewModel = ViewModelProviders.of(ShoppingFragment.instance, new CategoryViewModelFactory(ShoppingFragment.instance.getActivity().getApplication())).get(CategoryViewModel.class);
         ruleViewModel = ViewModelProviders.of(ShoppingFragment.instance, new RuleViewModelFactory(ShoppingFragment.instance.getActivity().getApplication(), -1L)).get(RuleViewModel.class);
 
         builder = new AlertDialog.Builder(ShoppingFragment.instance.getContext());
-        View view = ShoppingFragment.instance.getLayoutInflater().inflate(R.layout.new_item_dialog, null);
-        builder.setView(view);
+        layout = ShoppingFragment.instance.getLayoutInflater().inflate(R.layout.new_item_dialog, null);
+        builder.setView(layout);
 
-        itemNameInput = view.findViewById(R.id.item_name_edit_text);
-        newCategoryText = view.findViewById(R.id.new_category_text_view);
-        newCategoryEdit = view.findViewById(R.id.new_category_edit_text);
-        spinner = view.findViewById(R.id.category_spinner);
-        saveButton = view.findViewById(R.id.save_button);
-        ruleDeleteCheckbox = view.findViewById(R.id.checkbox_rule_to_delete);
-        ruleDeleteText = view.findViewById(R.id.text_rule_to_delete);
-        ruleAddCheckbox = view.findViewById(R.id.checkbox_rule_to_add);
-        ruleAddText = view.findViewById(R.id.text_rule_to_add);
+        itemNameInput = layout.findViewById(R.id.item_name_edit_text);
+        newCategoryText = layout.findViewById(R.id.new_category_text_view);
+        newCategoryEdit = layout.findViewById(R.id.new_category_edit_text);
+        spinner = layout.findViewById(R.id.category_spinner);
+        saveButton = layout.findViewById(R.id.save_button);
+        ruleDeleteCheckbox = layout.findViewById(R.id.checkbox_rule_to_delete);
+        ruleDeleteText = layout.findViewById(R.id.text_rule_to_delete);
+        ruleAddCheckbox = layout.findViewById(R.id.checkbox_rule_to_add);
+        ruleAddText = layout.findViewById(R.id.text_rule_to_add);
 
         categories = getCategoryStringList();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(ShoppingFragment.instance.getContext(), R.layout.support_simple_spinner_dropdown_item, categories);
@@ -86,6 +88,22 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
         ruleDeleteCheckbox.setOnCheckedChangeListener(this);
         ruleDeleteText.setOnClickListener(v -> ruleDeleteCheckbox.toggle());
         ruleAddText.setOnClickListener(v -> ruleAddCheckbox.toggle());
+    }
+
+    public ItemDialog(Item item) {
+        this();
+        this.itemToEdit = item;
+        TextView title = layout.findViewById(R.id.item_dialog_title);
+        title.setText(R.string.edit_item_head);
+        itemNameInput.setText(item.name);
+        if (item.isCategorized()) {
+            List<CategoryWithItems> categoryWithItems = ShoppingFragment.instance.categoriesWithItems;
+            for (int position = 0; position < ShoppingFragment.instance.categoriesWithItems.size(); position++) {
+                if (!categoryWithItems.get(position).items.contains(item)) continue;
+                spinner.setSelection(position);
+                break;
+            }
+        }
     }
 
     public void show() {
@@ -164,12 +182,26 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
                 Toast.makeText(ShoppingFragment.instance.getContext(), "Please fill out the new Category or select another Category Option", Toast.LENGTH_SHORT).show();
                 return;
             }
-            itemViewModel.insert(new Item(newItemName), new Category(newCategoryName), ruleToDelete, ruleDeleteCheckbox.isChecked(), ruleAddCheckbox.isChecked());
+            if (itemToEdit == null) itemViewModel.insert(new Item(newItemName), new Category(newCategoryName), ruleToDelete, ruleDeleteCheckbox.isChecked(), ruleAddCheckbox.isChecked());
+            else {
+                itemToEdit.name = newItemName;
+                itemViewModel.update(itemToEdit, new Category(newCategoryName), ruleToDelete, ruleDeleteCheckbox.isChecked(), ruleAddCheckbox.isChecked());
+            }
         } else if (position == size-2) { // None
-            itemViewModel.insert(new Item(newItemName), null, ruleToDelete, ruleDeleteCheckbox.isChecked(), false);
+            if (itemToEdit == null) itemViewModel.insert(new Item(newItemName), null, ruleToDelete, ruleDeleteCheckbox.isChecked(), false);
+            else {
+                itemToEdit.name = newItemName;
+                itemToEdit.categoryId = null;
+                itemViewModel.update(itemToEdit, null, ruleToDelete, ruleDeleteCheckbox.isChecked(), false);
+            }
         } else { // existing Category
             Category category = getCategoryByPosition(position);
-            itemViewModel.insert(new Item(newItemName, category.id), null, ruleToDelete, ruleDeleteCheckbox.isChecked(), ruleAddCheckbox.isChecked());
+            if (itemToEdit == null) itemViewModel.insert(new Item(newItemName, category.id), null, ruleToDelete, ruleDeleteCheckbox.isChecked(), ruleAddCheckbox.isChecked());
+            else {
+                itemToEdit.name = newItemName;
+                itemToEdit.categoryId = category.id;
+                itemViewModel.update(itemToEdit, null, ruleToDelete, ruleDeleteCheckbox.isChecked(), ruleAddCheckbox.isChecked());
+            }
         }
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         dialog.dismiss();

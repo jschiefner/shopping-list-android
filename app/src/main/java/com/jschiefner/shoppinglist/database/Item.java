@@ -93,6 +93,10 @@ public class Item {
         return json;
     }
 
+    public boolean isCategorized() {
+        return categoryId != null;
+    }
+
     @NotNull
     @Override
     public String toString() {

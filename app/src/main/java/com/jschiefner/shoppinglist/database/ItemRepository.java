@@ -33,6 +33,10 @@ public class ItemRepository {
         new UpdateItemAsyncTask(itemDao).execute(item);
     }
 
+    public void update(Item item, Category category, Rule ruleToDelete, boolean deleteRule, boolean addRule) {
+        new UpdateItemWithOptionsTask(itemDao, categoryDao, ruleDao, item, category, ruleToDelete, deleteRule, addRule).execute();
+    }
+
     public void delete(Item item) {
         new DeleteItemAsyncTask(itemDao).execute(item);
     }
@@ -98,6 +102,40 @@ public class ItemRepository {
                 item.categoryId = categoryId;
             }
             itemDao.insert(item);
+            if (ruleToDelete != null && deleteRule) ruleDao.delete(ruleToDelete);
+            if (addRule) ruleDao.insert(new Rule(item.name, item.categoryId));
+            return null;
+        }
+    }
+
+    private static class UpdateItemWithOptionsTask extends AsyncTask<Void, Void, Void> {
+        private ItemDao itemDao;
+        private CategoryDao categoryDao;
+        private RuleDao ruleDao;
+        private Item item;
+        private Category category;
+        private Rule ruleToDelete;
+        private boolean deleteRule;
+        private boolean addRule;
+
+        private UpdateItemWithOptionsTask(ItemDao itemDao, CategoryDao categoryDao, RuleDao ruleDao, Item item, Category category, Rule ruleToDelete, boolean deleteRule, boolean addRule) {
+            this.itemDao = itemDao;
+            this.categoryDao = categoryDao;
+            this.ruleDao = ruleDao;
+            this.item = item;
+            this.category = category;
+            this.ruleToDelete = ruleToDelete;
+            this.deleteRule = deleteRule;
+            this.addRule = addRule;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if (category != null) {
+                Long categoryId = categoryDao.insert(category);
+                item.categoryId = categoryId;
+            }
+            itemDao.update(item);
             if (ruleToDelete != null && deleteRule) ruleDao.delete(ruleToDelete);
             if (addRule) ruleDao.insert(new Rule(item.name, item.categoryId));
             return null;
