@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:visibility="gone"
-                    android:buttonTint="@color/red"/>
+                    android:buttonTint="@color/red" />
 
                 <TextView
                     android:id="@+id/text_rule_to_delete"

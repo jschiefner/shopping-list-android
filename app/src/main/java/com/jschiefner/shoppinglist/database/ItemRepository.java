@@ -25,8 +25,8 @@ public class ItemRepository {
         new InsertItemAsyncTask(itemDao).execute(item);
     }
 
-    public void insert(Item item, Category category, boolean deleteRule, boolean addRule) {
-        new InsertItemWithOptionsTask(itemDao, categoryDao, ruleDao, item, category, deleteRule, addRule).execute();
+    public void insert(Item item, Category category, Rule ruleToDelete, boolean deleteRule, boolean addRule) {
+        new InsertItemWithOptionsTask(itemDao, categoryDao, ruleDao, item, category, ruleToDelete, deleteRule, addRule).execute();
     }
 
     public void update(Item item) {
@@ -76,26 +76,30 @@ public class ItemRepository {
         private RuleDao ruleDao;
         private Item item;
         private Category category;
+        private Rule ruleToDelete;
         private boolean deleteRule;
         private boolean addRule;
 
-        private InsertItemWithOptionsTask(ItemDao itemDao, CategoryDao categoryDao, RuleDao ruleDao, Item item, Category category, boolean deleteRule, boolean addRule) {
+        private InsertItemWithOptionsTask(ItemDao itemDao, CategoryDao categoryDao, RuleDao ruleDao, Item item, Category category, Rule ruleToDelete, boolean deleteRule, boolean addRule) {
             this.itemDao = itemDao;
             this.categoryDao = categoryDao;
             this.ruleDao = ruleDao;
             this.item = item;
             this.category = category;
+            this.ruleToDelete = ruleToDelete;
             this.deleteRule = deleteRule;
             this.addRule = addRule;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Long categoryId = categoryDao.insert(category);
-            item.categoryId = categoryId;
+            if (category != null) {
+                Long categoryId = categoryDao.insert(category);
+                item.categoryId = categoryId;
+            }
             itemDao.insert(item);
-            if (deleteRule) ruleDao.delete(item.name);
-            if (addRule) ruleDao.insert(new Rule(item.name, categoryId));
+            if (ruleToDelete != null && deleteRule) ruleDao.delete(ruleToDelete);
+            if (addRule) ruleDao.insert(new Rule(item.name, item.categoryId));
             return null;
         }
     }

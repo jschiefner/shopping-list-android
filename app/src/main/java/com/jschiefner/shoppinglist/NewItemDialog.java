@@ -1,5 +1,6 @@
 package com.jschiefner.shoppinglist;
 
+import android.content.res.ColorStateList;
 import android.text.SpannableString;
 import android.text.style.StrikethroughSpan;
 import android.view.KeyEvent;
@@ -9,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,7 +34,7 @@ import java.util.List;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
 
-public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelectedListener {
+public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
     public ItemViewModel itemViewModel;
     private CategoryViewModel categoryViewModel;
     private RuleViewModel ruleViewModel;
@@ -50,6 +52,8 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
     private AlertDialog.Builder builder;
     private List<String> categories;
     private AlertDialog dialog;
+
+    private Rule ruleToDelete;
 
     public NewItemDialog() {
         itemViewModel = ViewModelProviders.of(ShoppingFragment.instance, new ItemViewModelFactory(ShoppingFragment.instance.getActivity().getApplication())).get(ItemViewModel.class);
@@ -79,6 +83,9 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
         itemNameInput.setOnEditorActionListener(this::itemNameInputChange);
         newCategoryEdit.setOnEditorActionListener(this::newCategoryInputChange);
         spinner.setOnItemSelectedListener(this);
+        ruleDeleteCheckbox.setOnCheckedChangeListener(this);
+        ruleDeleteText.setOnClickListener(v -> ruleDeleteCheckbox.toggle());
+        ruleAddText.setOnClickListener(v -> ruleAddCheckbox.toggle());
     }
 
     public void show() {
@@ -110,13 +117,16 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
         ruleAddText.setText(String.format("%s > %s", newItemName, newCategoryName));
         ruleViewModel.getRuleWithCategory(newItemName, object -> {
             RuleWithCategory ruleWithCategory = (RuleWithCategory) object;
-            if (ruleWithCategory == null) return;
-            Rule rule = ruleWithCategory.rule;
+            if (ruleWithCategory == null) {
+                ruleToDelete = null;
+                return;
+            }
+            ruleToDelete = ruleWithCategory.rule;
             Category category = ruleWithCategory.category;
 
             ruleDeleteCheckbox.setChecked(true);
             ruleDeleteCheckbox.setVisibility(View.VISIBLE);
-            SpannableString spannableString = new SpannableString(String.format("%s -> %s", rule.name, category.name));
+            SpannableString spannableString = new SpannableString(String.format("%s -> %s", ruleToDelete.name, category.name));
             spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), 0);
             ruleDeleteText.setText(spannableString);
             ruleDeleteText.setVisibility(View.VISIBLE);
@@ -154,14 +164,14 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
                 Toast.makeText(ShoppingFragment.instance.getContext(), "Please fill out the new Category or select another Category Option", Toast.LENGTH_SHORT).show();
                 return;
             }
-            itemViewModel.insert(new Item(newItemName), new Category(newCategoryName), ruleDeleteCheckbox.isChecked(), ruleAddCheckbox.isChecked());
+            itemViewModel.insert(new Item(newItemName), new Category(newCategoryName), ruleToDelete, ruleDeleteCheckbox.isChecked(), ruleAddCheckbox.isChecked());
         } else if (position == size-2) { // None
-            itemViewModel.insert(new Item(newItemName));
+            itemViewModel.insert(new Item(newItemName), null, ruleToDelete, ruleDeleteCheckbox.isChecked(), false);
         } else { // existing Category
             Category category = getCategoryByPosition(position);
-            itemViewModel.insert(new Item(newItemName, category.id));
-            if (ruleDeleteCheckbox.isChecked()) ruleViewModel.delete(newItemName);
+            itemViewModel.insert(new Item(newItemName, category.id), null, ruleToDelete, ruleDeleteCheckbox.isChecked(), ruleAddCheckbox.isChecked());
         }
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         dialog.dismiss();
     }
 
@@ -176,7 +186,6 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
             newCategoryEdit.setVisibility(View.VISIBLE);
             ruleAddCheckbox.setVisibility(View.GONE);
             ruleAddText.setVisibility(View.GONE);
-
         } else if (position == size-2){ // None
             newCategoryText.setVisibility(View.GONE);
             newCategoryEdit.setVisibility(View.GONE);
@@ -184,13 +193,18 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
             ruleAddText.setVisibility(View.GONE);
             ruleViewModel.getRuleWithCategory(newItemName, object -> {
                 RuleWithCategory ruleWithCategory = (RuleWithCategory) object;
-                if (ruleWithCategory == null) return;
-                Rule rule = ruleWithCategory.rule;
+                if (ruleWithCategory == null) {
+                    ruleDeleteCheckbox.setVisibility(View.GONE);
+                    ruleDeleteText.setVisibility(View.GONE);
+                    ruleToDelete = null;
+                    return;
+                }
+                ruleToDelete = ruleWithCategory.rule;
                 Category category = ruleWithCategory.category;
 
                 ruleDeleteCheckbox.setVisibility(View.VISIBLE);
                 ruleDeleteCheckbox.setChecked(true);
-                SpannableString spannableString = new SpannableString(String.format("%s -> %s", rule.name, category.name));
+                SpannableString spannableString = new SpannableString(String.format("%s -> %s", ruleToDelete.name, category.name));
                 spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), 0);
                 ruleDeleteText.setVisibility(View.VISIBLE);
                 ruleDeleteText.setText(spannableString);
@@ -204,6 +218,7 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
                 Category categorySelected = getCategoryByPosition(position);
 
                 if (ruleWithCategory == null) {
+                    ruleToDelete = null;
                     ruleDeleteCheckbox.setVisibility(View.GONE);
                     ruleDeleteText.setVisibility(View.GONE);
                     ruleAddCheckbox.setChecked(true);
@@ -211,8 +226,9 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
                     ruleAddText.setText(String.format("%s > %s", newItemName, categorySelected.name));
                     ruleAddText.setVisibility(View.VISIBLE);
                 } else if (ruleWithCategory.category.id != categorySelected.id) {
+                    ruleToDelete = ruleWithCategory.rule;
                     ruleDeleteCheckbox.setChecked(true);
-                    SpannableString spannableString = new SpannableString(String.format("%s -> %s", ruleWithCategory.rule.name, ruleWithCategory.category.name));
+                    SpannableString spannableString = new SpannableString(String.format("%s -> %s", ruleToDelete.name, ruleWithCategory.category.name));
                     spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), 0);
                     ruleDeleteCheckbox.setVisibility(View.VISIBLE);
                     ruleDeleteText.setText(spannableString);
@@ -223,6 +239,7 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
                     ruleAddText.setText(String.format("%s > %s", newItemName, categorySelected.name));
                     ruleAddText.setVisibility(View.VISIBLE);
                 } else {
+                    ruleToDelete = null;
                     ruleDeleteCheckbox.setVisibility(View.GONE);
                     ruleDeleteText.setVisibility(View.GONE);
                     ruleAddCheckbox.setVisibility(View.GONE);
@@ -235,5 +252,13 @@ public class NewItemDialog implements View.OnClickListener, Spinner.OnItemSelect
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+        if (ruleDeleteCheckbox != compoundButton) return;
+
+        if (checked) ruleDeleteCheckbox.setButtonTintList(ColorStateList.valueOf(ShoppingFragment.instance.getContext().getResources().getColor(R.color.red)));
+        else ruleDeleteCheckbox.setButtonTintList(ColorStateList.valueOf(ShoppingFragment.instance.getContext().getResources().getColor(R.color.gray_default_checkbox)));
     }
 }
