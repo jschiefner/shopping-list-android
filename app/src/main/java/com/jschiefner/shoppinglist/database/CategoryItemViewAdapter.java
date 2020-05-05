@@ -1,34 +1,21 @@
 package com.jschiefner.shoppinglist.database;
 
-import android.content.Context;
 import android.content.res.ColorStateList;
-import android.os.Build;
 import android.text.SpannableString;
 import android.text.style.StrikethroughSpan;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jschiefner.shoppinglist.R;
-import com.jschiefner.shoppinglist.ServerAPI;
 import com.jschiefner.shoppinglist.ShoppingFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CategoryItemViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public List<CategoryWithItems> categoriesWithItems = new ArrayList<>();
     private Object[] listStore = new Object[0];
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -40,9 +27,7 @@ public class CategoryItemViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setCategoriesWithItems(List<CategoryWithItems> categoriesWithItems) {
-        this.categoriesWithItems = categoriesWithItems;
+    public void update() {
         this.listStore = new Object[getItemCount()];
         notifyDataSetChanged();
     }
@@ -52,7 +37,7 @@ public class CategoryItemViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         // [OBST, [apfel, na, fe], GEMÜSE, [möhre, aro, kar]]
         //   0       1     2   3      4        5    6    7
         int temp = 0;
-        for (CategoryWithItems categoryWithItems : categoriesWithItems) {
+        for (CategoryWithItems categoryWithItems : ShoppingFragment.instance.categoriesWithItems) {
             int current = position - temp;
             int next = temp + categoryWithItems.items.size() + 1;
             if (position >= next) {
@@ -118,8 +103,8 @@ public class CategoryItemViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public int getItemCount() {
 //        int size = categoriesWithItems.stream().mapToInt(categoryWithItems -> categoryWithItems.items.size()).sum();
-        int size = categoriesWithItems.size();
-        for (CategoryWithItems categoryWithItems : categoriesWithItems) size += categoryWithItems.items.size();
+        int size = ShoppingFragment.instance.categoriesWithItems.size();
+        for (CategoryWithItems categoryWithItems : ShoppingFragment.instance.categoriesWithItems) size += categoryWithItems.items.size();
         return size;
     }
 }
