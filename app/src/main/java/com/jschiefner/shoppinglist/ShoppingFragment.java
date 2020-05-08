@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jschiefner.shoppinglist.database.CategoryViewModel;
@@ -30,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ShoppingFragment extends Fragment {
     private RecyclerView categorizedRecyclerView;
     private RecyclerView uncategorizedRecyclerView;
+    private TextView uncategorizedItemsHeader;
     public ItemViewModel itemViewModel;
     private CategoryViewModel categoryViewModel;
     private RuleViewModel ruleViewModel;
@@ -48,6 +50,8 @@ public class ShoppingFragment extends Fragment {
 
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setActionBarTitle(R.string.shopping_fragment_label);
+
+        uncategorizedItemsHeader = rootView.findViewById(R.id.uncategorized_items);
 
         categorizedRecyclerView = rootView.findViewById(R.id.items_recycler_view);
         categorizedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -68,7 +72,11 @@ public class ShoppingFragment extends Fragment {
             categoriesWithItems = items;
             categorizedItemsAdapter.update();
         });
-        itemViewModel.getUncategorizedItems().observe(this, uncategorizedItemViewAdapter::setItems);
+        itemViewModel.getUncategorizedItems().observe(this, items -> {
+            uncategorizedItemViewAdapter.setItems(items);
+            if (items.isEmpty()) uncategorizedItemsHeader.setVisibility(View.GONE);
+            else uncategorizedItemsHeader.setVisibility(View.VISIBLE);
+        });
 
         new ItemTouchHelper(new ItemSwipeTouchHelper(this, categorizedItemsAdapter, 0, swipeFlags)).attachToRecyclerView(categorizedRecyclerView);
         new ItemTouchHelper(new ItemSwipeTouchHelper(this, uncategorizedItemViewAdapter, 0, swipeFlags)).attachToRecyclerView(uncategorizedRecyclerView);

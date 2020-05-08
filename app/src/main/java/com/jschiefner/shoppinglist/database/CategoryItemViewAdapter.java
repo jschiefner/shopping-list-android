@@ -33,11 +33,10 @@ public class CategoryItemViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public int getItemViewType(int position) { // position: 5
-        // [OBST, [apfel, na, fe], GEMÜSE, [möhre, aro, kar]]
-        //   0       1     2   3      4        5    6    7
+    public int getItemViewType(int position) {
         int temp = 0;
         for (CategoryWithItems categoryWithItems : ShoppingFragment.instance.categoriesWithItems) {
+            if (categoryWithItems.items.isEmpty()) continue;
             int current = position - temp;
             int next = temp + categoryWithItems.items.size() + 1;
             if (position >= next) {
@@ -102,9 +101,11 @@ public class CategoryItemViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-//        int size = categoriesWithItems.stream().mapToInt(categoryWithItems -> categoryWithItems.items.size()).sum();
-        int size = ShoppingFragment.instance.categoriesWithItems.size();
-        for (CategoryWithItems categoryWithItems : ShoppingFragment.instance.categoriesWithItems) size += categoryWithItems.items.size();
+        int size = 0;
+        for (CategoryWithItems categoryWithItems : ShoppingFragment.instance.categoriesWithItems) {
+            if (categoryWithItems.items.isEmpty()) continue;
+            size += 1 + categoryWithItems.items.size();
+        }
         return size;
     }
 }

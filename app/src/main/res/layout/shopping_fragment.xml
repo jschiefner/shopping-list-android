@@ -28,7 +28,8 @@
             android:layout_height="wrap_content"
             android:text="@string/uncategorized_items"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:visibility="gone"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/uncategorized_recycler_view"
