@@ -2,6 +2,7 @@ package com.jschiefner.shoppinglist.database;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
 import com.jschiefner.shoppinglist.ItemDialog;
@@ -61,6 +62,7 @@ public class ItemSwipeTouchHelper extends ItemTouchHelper.SimpleCallback {
         Drawable icon;
 
         if (dX > 0) { // Swiping to the right
+            if (dX > 100) dX = 100;
             icon = pencilIcon;
             int iconTop = itemView.getTop() + (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
             int iconBottom = iconTop + icon.getIntrinsicHeight();
@@ -69,6 +71,7 @@ public class ItemSwipeTouchHelper extends ItemTouchHelper.SimpleCallback {
 
             icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
         } else if (dX < 0) { // Swiping to the left
+            if (dX < -100) dX = -100;
             icon = trashIcon;
             int iconTop = itemView.getTop() + (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
             int iconBottom = iconTop + icon.getIntrinsicHeight();
@@ -84,12 +87,8 @@ public class ItemSwipeTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     private int getAlpha(float dx) {
         dx = Math.abs(dx);
-        int max = 800;
-        if (dx > max) {
-            return 0;
-        } else {
-            float percent = dx / max;
-            return 255 - (int) (255 * percent);
-        }
+        int max = 100;
+        float percent = dx / max;
+        return (int) (255 * percent);
     }
 }

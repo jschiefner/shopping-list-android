@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jschiefner.shoppinglist.R;
-import com.jschiefner.shoppinglist.ServerAPI;
 import com.jschiefner.shoppinglist.ShoppingFragment;
 
 import androidx.annotation.NonNull;
@@ -41,9 +40,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements TextView.
             Log.i("CUSTOM", "updated (pressed done): " + item);
             item.update(editText.getText().toString());
             ShoppingFragment.instance.itemViewModel.update(item);
-            ServerAPI.getInstance().update(item, editText.getContext());
         }
-
+        editText.clearFocus();
         return true;
     }
 
@@ -55,7 +53,6 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements TextView.
             Log.i("CUSTOM", "updated (changed focus): " + item);
             item.update(editText.getText().toString());
             ShoppingFragment.instance.itemViewModel.update(item);
-            ServerAPI.getInstance().update(item, editText.getContext());
         }
 
     }
@@ -66,6 +63,5 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements TextView.
         Log.i("CUSTOM", "checked: " + item + value);
         item.toggle(value);
         ShoppingFragment.instance.itemViewModel.update(item);
-        ServerAPI.getInstance().update(item, compoundButton.getContext());
     }
 }
