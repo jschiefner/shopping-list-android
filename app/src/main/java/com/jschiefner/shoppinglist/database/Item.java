@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Entity(foreignKeys = @ForeignKey(entity = Category.class, parentColumns = "id", childColumns = "categoryId", onDelete = ForeignKey.SET_NULL))
 @TypeConverters({DateConverter.class, UUIDConverter.class})
-public class Item implements com.jschiefner.shoppinglist.Entity {
+public class Item implements com.jschiefner.shoppinglist.sync.Entity {
     @SuppressLint("SimpleDateFormat")
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("y/M/d H:m:s");
 
@@ -84,6 +84,7 @@ public class Item implements com.jschiefner.shoppinglist.Entity {
     public JSONObject toJson(Action action) {
         JSONObject json = new JSONObject();
         try {
+            json.put("type", "item");
             json.put("action", action.toString());
             json.put("id", uuid);
             json.put("name", name);

@@ -2,12 +2,10 @@ package com.jschiefner.shoppinglist.database;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 
 import com.jschiefner.shoppinglist.ItemDialog;
 import com.jschiefner.shoppinglist.R;
-import com.jschiefner.shoppinglist.ServerAPI;
 import com.jschiefner.shoppinglist.ShoppingFragment;
 
 import androidx.annotation.NonNull;

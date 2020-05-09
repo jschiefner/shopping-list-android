@@ -19,7 +19,6 @@ import com.jschiefner.shoppinglist.database.ItemSwipeTouchHelper;
 import com.jschiefner.shoppinglist.database.RuleViewModel;
 import com.jschiefner.shoppinglist.database.RuleViewModelFactory;
 import com.jschiefner.shoppinglist.database.UncategorizedItemViewAdapter;
-import com.jschiefner.shoppinglist.Entity.Action;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +113,6 @@ public class ShoppingFragment extends Fragment {
 
     public void handleFabClick() {
         new ItemDialog().show();
-//        SyncJob.getInstance().call(new Item(""), Action.create);
     }
 
     private void updateView() {

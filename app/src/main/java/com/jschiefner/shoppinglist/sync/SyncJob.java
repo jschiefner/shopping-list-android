@@ -1,25 +1,25 @@
-package com.jschiefner.shoppinglist;
+package com.jschiefner.shoppinglist.sync;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.BufferedSink;
 
-import com.jschiefner.shoppinglist.Entity.Action;
+import com.jschiefner.shoppinglist.sync.Entity.Action;
 
 public class SyncJob implements Callback {
 
@@ -42,35 +42,54 @@ public class SyncJob implements Callback {
         return instance;
     }
 
-    public void create(Entity entity) {
-        call(Action.create, entity);
+    public SyncJob create(Entity entity) {
+        entities.put(entity.toJson(Action.create));
+        return getInstance();
     }
 
-    public void update(Entity entity) {
-        call(Action.update, entity);
-    }
-
-    public void delete(Entity entity) {
-        call(Action.delete, entity);
-    }
-
-
-    public void call(Action action, Entity... newEntities) {
-        Log.i("CUSTOM", "called times: " + counter++);
-
-        for (Entity entity : newEntities) {
-            if (entity != null) entities.put(entity.toJson(action));
+    public SyncJob create(Entity entity, UUID categoryId) {
+        JSONObject json = entity.toJson(Action.create);
+        try {
+            json.put("categoryId", categoryId);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        entities.put(json);
+        return getInstance();
+    }
+
+    public SyncJob update(Entity entity) {
+        entities.put(entity.toJson(Action.update));
+        return getInstance();
+    }
+
+    public SyncJob update(Entity entity, UUID categoryId) {
+        JSONObject json = entity.toJson(Action.update);
+        try {
+            json.put("categoryId", categoryId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        entities.put(json);
+        return getInstance();
+    }
+
+    public SyncJob delete(Entity entity) {
+        if (entity != null) entities.put(entity.toJson(Action.delete));
+        return getInstance();
+    }
+
+
+    public void perform() {
+        Log.i("CUSTOM", "called perform times: " + counter++);
 
         // All database ojects implement Entity Interface
         // ezpz
 
-        // add item with action to list
-
         // TODO: think about better ways as to start as few threads as possible
         handler.removeCallbacks(runnable);
         runnable = () -> {
-            Log.i("CUSTOM", "triggered");
+            Log.i("CUSTOM", "job got triggered");
             // send data to server to server
             request();
 

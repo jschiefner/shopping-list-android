@@ -1,23 +1,16 @@
-package com.jschiefner.shoppinglist;
+package com.jschiefner.shoppinglist.sync;
 
-import android.content.Context;
 import android.util.Log;
-
-import com.jschiefner.shoppinglist.database.Item;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import androidx.annotation.Nullable;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.BufferedSink;
 
 public class ServerAPI implements Callback {
     private static final String BASE_URL = "https://1ed7b55.online-server.cloud/";

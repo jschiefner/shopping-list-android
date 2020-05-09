@@ -1,10 +1,8 @@
-package com.jschiefner.shoppinglist;
+package com.jschiefner.shoppinglist.sync;
 
 import org.json.JSONObject;
 
 import java.util.Map;
-
-import androidx.annotation.NonNull;
 
 public interface Entity {
     enum Action {create, update, delete};
