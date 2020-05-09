@@ -2,9 +2,14 @@ package com.jschiefner.shoppinglist.database;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Looper;
+
+import com.jschiefner.shoppinglist.Entity;
+import com.jschiefner.shoppinglist.SyncJob;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemRepository {
@@ -27,6 +32,29 @@ public class ItemRepository {
 
     public void insert(Item item, Category category, Rule ruleToDelete, boolean deleteRule, boolean addRule) {
         new InsertItemWithOptionsTask(itemDao, categoryDao, ruleDao, item, category, ruleToDelete, deleteRule, addRule).execute();
+//        if (category != null) {
+//            Long categoryId = categoryDao.insert(category);
+//            item.categoryId = categoryId;
+//        }
+//        itemDao.insert(item);
+//        if (ruleToDelete != null && deleteRule) ruleDao.delete(ruleToDelete);
+//        if (addRule) {
+//            Rule rule = new Rule(item.name, item.categoryId);
+//            ruleDao.insert(rule);
+//        }
+        List<Entity> entities = new ArrayList<>(4);
+        entities.add(item);
+        entities.add(category);
+        Rule ruleToAdd;
+        if (ruleToDelete != null && deleteRule) {
+            entities.add(ruleToDelete);
+        }
+        if (addRule) {
+            Long categoryId; // oof fuck
+            // how to pass the id of the category now? bzw how to upload that id? muss ja mit der rule eig hochgeladen werden
+            // muss das wohl doch aus dem asynctask starten iwie um die category uuid zu kriegen (hab ja evtl. nur den fremdschlüssel auf die kategorie lel
+            ruleToAdd = new Rule(item.name, item.categoryId)
+        }
     }
 
     public void update(Item item) {
@@ -103,7 +131,10 @@ public class ItemRepository {
             }
             itemDao.insert(item);
             if (ruleToDelete != null && deleteRule) ruleDao.delete(ruleToDelete);
-            if (addRule) ruleDao.insert(new Rule(item.name, item.categoryId));
+            if (addRule) {
+                Rule rule = new Rule(item.name, item.categoryId);
+                ruleDao.insert(rule);
+            }
             return null;
         }
     }

@@ -46,7 +46,6 @@ public class ItemSwipeTouchHelper extends ItemTouchHelper.SimpleCallback {
         switch (direction) {
             case ItemTouchHelper.LEFT:
                 ShoppingFragment.instance.itemViewModel.delete(item);
-                ServerAPI.getInstance().delete(item, ShoppingFragment.instance.getContext());
                 break;
             case ItemTouchHelper.RIGHT:
                 adapter.notifyItemChanged(viewHolder.getAdapterPosition());

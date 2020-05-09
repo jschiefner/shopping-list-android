@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jschiefner.shoppinglist.R;
+import com.jschiefner.shoppinglist.ShoppingFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class UncategorizedItemViewAdapter extends RecyclerView.Adapter<ItemViewHolder> {
-    private List<Item> items = new ArrayList<>();
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -31,7 +26,7 @@ public class UncategorizedItemViewAdapter extends RecyclerView.Adapter<ItemViewH
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Item item = items.get(position);
+        Item item = ShoppingFragment.instance.uncategorizedItems.get(position);
         if (item.completed) {
             SpannableString spannableString = new SpannableString(item.name);
             spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), 0);
@@ -51,6 +46,6 @@ public class UncategorizedItemViewAdapter extends RecyclerView.Adapter<ItemViewH
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return ShoppingFragment.instance.uncategorizedItems.size();
     }
 }

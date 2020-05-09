@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -11,12 +12,14 @@ import com.jschiefner.shoppinglist.database.CategoryViewModel;
 import com.jschiefner.shoppinglist.database.CategoryViewModelFactory;
 import com.jschiefner.shoppinglist.database.CategoryWithItems;
 import com.jschiefner.shoppinglist.database.CategoryItemViewAdapter;
+import com.jschiefner.shoppinglist.database.Item;
 import com.jschiefner.shoppinglist.database.ItemViewModel;
 import com.jschiefner.shoppinglist.database.ItemViewModelFactory;
 import com.jschiefner.shoppinglist.database.ItemSwipeTouchHelper;
 import com.jschiefner.shoppinglist.database.RuleViewModel;
 import com.jschiefner.shoppinglist.database.RuleViewModelFactory;
 import com.jschiefner.shoppinglist.database.UncategorizedItemViewAdapter;
+import com.jschiefner.shoppinglist.Entity.Action;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ShoppingFragment extends Fragment {
     private RecyclerView categorizedRecyclerView;
     private RecyclerView uncategorizedRecyclerView;
+    private LinearLayout emptyCartLayout;
     private TextView uncategorizedItemsHeader;
     public ItemViewModel itemViewModel;
     private CategoryViewModel categoryViewModel;
@@ -40,6 +44,7 @@ public class ShoppingFragment extends Fragment {
     private FloatingActionButton fab;
     public static ShoppingFragment instance;
     public List<CategoryWithItems> categoriesWithItems = new ArrayList<>();
+    public List<Item> uncategorizedItems = new ArrayList<>();
     private final int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
 
     @Override
@@ -52,6 +57,7 @@ public class ShoppingFragment extends Fragment {
         mainActivity.setActionBarTitle(R.string.shopping_fragment_label);
 
         uncategorizedItemsHeader = rootView.findViewById(R.id.uncategorized_items);
+        emptyCartLayout = rootView.findViewById(R.id.empty_cart_layout);
 
         categorizedRecyclerView = rootView.findViewById(R.id.items_recycler_view);
         categorizedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -71,11 +77,14 @@ public class ShoppingFragment extends Fragment {
         categoryViewModel.getCategoriesWithItems().observe(this, items -> {
             categoriesWithItems = items;
             categorizedItemsAdapter.update();
+            updateView();
         });
         itemViewModel.getUncategorizedItems().observe(this, items -> {
-            uncategorizedItemViewAdapter.setItems(items);
+            uncategorizedItems = items;
+            uncategorizedItemViewAdapter.notifyDataSetChanged();
             if (items.isEmpty()) uncategorizedItemsHeader.setVisibility(View.GONE);
             else uncategorizedItemsHeader.setVisibility(View.VISIBLE);
+            updateView();
         });
 
         new ItemTouchHelper(new ItemSwipeTouchHelper(this, categorizedItemsAdapter, 0, swipeFlags)).attachToRecyclerView(categorizedRecyclerView);
@@ -105,5 +114,11 @@ public class ShoppingFragment extends Fragment {
 
     public void handleFabClick() {
         new ItemDialog().show();
+//        SyncJob.getInstance().call(new Item(""), Action.create);
+    }
+
+    private void updateView() {
+        if (categorizedItemsAdapter.getItemCount() == 0 && uncategorizedItems.isEmpty()) emptyCartLayout.setVisibility(View.VISIBLE);
+        else emptyCartLayout.setVisibility(View.GONE);
     }
 }

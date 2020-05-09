@@ -18,4 +18,5 @@
     <string name="category_tag">Category:</string>
     <string name="item_tag">Name:</string>
     <string name="new_category_text">New Category:</string>
+    <string name="nothing_here_yet">Nothing in Here...\n Add some Shopping Items!</string>
 </resources>

@@ -23,6 +23,9 @@ public interface ItemDao {
     @Query("select * from item where categoryId is null")
     LiveData<List<Item>> getUncategorizedItems();
 
+    @Query("select * from item where completed = 1")
+    List<Item> getCompleted();
+
     @Query("delete from item where completed = 1")
     void deleteCompleted();
 

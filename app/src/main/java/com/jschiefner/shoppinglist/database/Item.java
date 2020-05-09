@@ -16,11 +16,12 @@ import androidx.room.TypeConverters;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity(foreignKeys = @ForeignKey(entity = Category.class, parentColumns = "id", childColumns = "categoryId", onDelete = ForeignKey.SET_NULL))
 @TypeConverters({DateConverter.class, UUIDConverter.class})
-public class Item {
+public class Item implements com.jschiefner.shoppinglist.Entity {
     @SuppressLint("SimpleDateFormat")
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("y/M/d H:m:s");
 
@@ -79,9 +80,11 @@ public class Item {
         this.updatedAt = new Date();
     }
 
-    public JSONObject toJson() {
+    @Override
+    public JSONObject toJson(Action action) {
         JSONObject json = new JSONObject();
         try {
+            json.put("action", action.toString());
             json.put("id", uuid);
             json.put("name", name);
             json.put("completed", completed);
@@ -101,5 +104,10 @@ public class Item {
     @Override
     public String toString() {
         return String.format("<Item> name: %s, id: %s", name, uuid);
+    }
+
+    @Override
+    public Item fromMap(Map<String, String> map) {
+        return null;
     }
 }
