@@ -23,10 +23,12 @@ public class RuleRepository {
 
     public void insert(Rule rule) {
         new InsertRuleTask(ruleDao, categoryDao).execute(rule);
+        SyncJob.getInstance().perform();
     }
 
     public void delete(Rule rule) {
         new DeleteRuleTask(ruleDao).execute(rule);
+        SyncJob.getInstance().delete(rule).perform();
     }
 
     public void getRuleWithCategory(String name, QueryHandler handler) {

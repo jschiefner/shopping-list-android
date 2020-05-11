@@ -33,6 +33,6 @@ public interface RuleDao {
     @Delete
     int delete(Rule rule);
 
-    @Query("delete from rule where name like '%' || :name || '%'")
-    void delete(String name);
+    @Query("delete from rule where uuid = :uuid")
+    void delete(String uuid);
 }

@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -63,15 +63,8 @@
             android:layout_marginTop="10dp"
             android:nestedScrollingEnabled="false"
             android:scrollbars="vertical"
-            android:background="@color/transparent" />
-
+            android:background="@color/transparent"
+            android:layout_marginBottom="40dp" />
     </LinearLayout>
 
-
-
 </androidx.core.widget.NestedScrollView>
-
-<!--// * Job der nur läuft wenn internet da ist! DEFERRED-->
-<!--// * job der regelmäßig läuft und bei jeder änderung getriggered wird-->
-<!--// * änderungen zusammenfassen in "jobs", die der "Job" Klasse statisch in ner liste zuweisen oder so-->
-<!--// * -> den task dann darauf schauen lassen ob sich lang genug nix mehr geändert hat, dann abschicken-->
