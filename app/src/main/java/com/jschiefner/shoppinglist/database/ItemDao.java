@@ -17,8 +17,8 @@ public interface ItemDao {
     @Query("select * from item where id = :id")
     LiveData<Item> getItem(long id);
 
-    @Query("select * from item where id = :uuid")
-    LiveData<Item> getItem(String uuid);
+    @Query("select * from item where uuid = :uuid")
+    Item getItem(String uuid);
 
     @Query("select * from item where categoryId is null")
     LiveData<List<Item>> getUncategorizedItems();

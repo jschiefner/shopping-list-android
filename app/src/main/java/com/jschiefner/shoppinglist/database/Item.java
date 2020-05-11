@@ -59,6 +59,20 @@ public class Item implements com.jschiefner.shoppinglist.sync.Entity {
         this.updatedAt = now;
     }
 
+    @Ignore
+    public Item(String name, String uuid, Long categoryId, Boolean completed, String createdAt, String updatedAt) {
+        this.name = name;
+        this.uuid = UUID.fromString(uuid);
+        this.categoryId = categoryId;
+        this.completed = completed;
+        try {
+            this.createdAt = dateFormat.parse(createdAt);
+            this.updatedAt = dateFormat.parse(updatedAt);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Item(String name, String uuid, String createdAt, String updatedAt) {
         this.name = name;
         this.uuid = UUID.fromString(uuid);
@@ -78,6 +92,18 @@ public class Item implements com.jschiefner.shoppinglist.sync.Entity {
     public void update(String newName) {
         this.name = newName;
         this.updatedAt = new Date();
+    }
+
+    public void update(String name, Long categoryId, Boolean completed, String createdAt, String updatedAt) {
+        this.name = name;
+        this.categoryId = categoryId;
+        this.completed = completed;
+        try {
+            this.createdAt = dateFormat.parse(createdAt);
+            this.updatedAt = dateFormat.parse(updatedAt);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

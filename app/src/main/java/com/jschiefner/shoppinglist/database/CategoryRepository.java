@@ -3,6 +3,8 @@ package com.jschiefner.shoppinglist.database;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import com.jschiefner.shoppinglist.sync.SyncJob;
+
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
@@ -21,10 +23,12 @@ public class CategoryRepository {
 
     public void insert(Category category) {
         new InsertCategoryTask(categoryDao).execute(category);
+        SyncJob.getInstance().create(category).perform();
     }
 
     public void delete(Category category) {
         new DeleteCategoryTask(categoryDao).execute(category);
+        SyncJob.getInstance().delete(category).perform();
     }
 
     public void getCategoryByRuleName(String name, QueryHandler handler) {

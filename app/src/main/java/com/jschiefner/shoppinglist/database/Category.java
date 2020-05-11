@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -22,6 +23,12 @@ public class Category implements com.jschiefner.shoppinglist.sync.Entity {
     public Category(String name) {
         this.name = name;
         this.uuid = UUID.randomUUID();
+    }
+
+    @Ignore
+    public Category(String name, String uuid) {
+        this.name = name;
+        this.uuid = UUID.fromString(uuid);
     }
 
     @Override

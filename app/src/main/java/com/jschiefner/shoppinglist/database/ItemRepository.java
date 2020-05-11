@@ -25,29 +25,29 @@ public class ItemRepository {
         items = itemDao.getAllItems();
     }
 
-    public void insert(Item item) {
-        new InsertItemAsyncTask(itemDao).execute(item);
-    }
-
     public void insert(Item item, Category category, Rule ruleToDelete, boolean deleteRule, boolean addRule) {
         new InsertItemWithOptionsTask(itemDao, categoryDao, ruleDao, item, category, ruleToDelete, deleteRule, addRule).execute();
         SyncJob.getInstance().perform();
     }
 
     public void update(Item item) {
-        new UpdateItemAsyncTask(itemDao).execute(item);
+        new UpdateItemAsyncTask(itemDao, categoryDao).execute(item);
+        SyncJob.getInstance().perform();
     }
 
     public void update(Item item, Category category, Rule ruleToDelete, boolean deleteRule, boolean addRule) {
         new UpdateItemWithOptionsTask(itemDao, categoryDao, ruleDao, item, category, ruleToDelete, deleteRule, addRule).execute();
+        SyncJob.getInstance().perform();
     }
 
     public void delete(Item item) {
         new DeleteItemAsyncTask(itemDao).execute(item);
+        SyncJob.getInstance().delete(item).perform();
     }
 
     public void deleteCompleted() {
         new DeleteCompletedTask(itemDao).execute();
+        SyncJob.getInstance().perform();
     }
 
     public LiveData<List<Item>> getItems() {
@@ -60,23 +60,6 @@ public class ItemRepository {
 
     public LiveData<List<Item>> getUncategorizedItems() {
         return itemDao.getUncategorizedItems();
-    }
-
-    private static class InsertItemAsyncTask extends AsyncTask<Item, Void, Void> {
-        private ItemDao itemDao;
-
-        private InsertItemAsyncTask(ItemDao itemDao) {
-            this.itemDao = itemDao;
-        }
-
-        @Override
-        protected Void doInBackground(Item... items) {
-            Item item = items[0];
-            Rule rule = ItemDatabase.getInstance().ruleDao().getRuleByName(item.name);
-            if (rule != null) item.categoryId = rule.categoryId;
-            itemDao.insert(item);
-            return null;
-        }
     }
 
     private static class InsertItemWithOptionsTask extends AsyncTask<Void, Void, Void> {
@@ -105,22 +88,23 @@ public class ItemRepository {
             if (category != null) {
                 Long categoryId = categoryDao.insert(category);
                 item.categoryId = categoryId;
-                SyncJob.getInstance().create(category);
-                SyncJob.getInstance().create(item, category.uuid);
+                SyncJob.getInstance()
+                        .create(category)
+                        .create(item, category.uuid);
             } else if (item.isCategorized()) {
-                Category category = categoryDao.getCategory(item.categoryId);
-                SyncJob.getInstance().create(item, category.uuid);
-            }
+                Category existingCategory = categoryDao.getCategory(item.categoryId);
+                category = existingCategory;
+                SyncJob.getInstance().create(item, existingCategory.uuid);
+            } else SyncJob.getInstance().create(item);
             itemDao.insert(item);
-
             if (ruleToDelete != null && deleteRule) {
                 ruleDao.delete(ruleToDelete);
                 SyncJob.getInstance().delete(ruleToDelete);
             }
             if (addRule) {
                 Rule ruleToAdd = new Rule(item.name, item.categoryId);
+                SyncJob.getInstance().create(ruleToAdd, category.uuid);
                 ruleDao.insert(ruleToAdd);
-                SyncJob.getInstance().create(ruleToAdd);
             }
             return null;
         }
@@ -152,24 +136,44 @@ public class ItemRepository {
             if (category != null) {
                 Long categoryId = categoryDao.insert(category);
                 item.categoryId = categoryId;
-            }
+                SyncJob.getInstance()
+                        .update(item, category.uuid)
+                        .create(category);
+            } else if (item.isCategorized()) {
+                Category existingCategory = categoryDao.getCategory(item.categoryId);
+                category = existingCategory;
+                SyncJob.getInstance().update(item, existingCategory.uuid);
+            } else SyncJob.getInstance().update(item);
             itemDao.update(item);
-            if (ruleToDelete != null && deleteRule) ruleDao.delete(ruleToDelete);
-            if (addRule) ruleDao.insert(new Rule(item.name, item.categoryId));
+            if (ruleToDelete != null && deleteRule) {
+                ruleDao.delete(ruleToDelete);
+                SyncJob.getInstance().delete(ruleToDelete);
+            }
+            if (addRule) {
+                Rule ruleToAdd = new Rule(item.name, item.categoryId);
+                SyncJob.getInstance().create(ruleToAdd, category.uuid);
+                ruleDao.insert(new Rule(item.name, item.categoryId));
+            }
             return null;
         }
     }
 
     private static class UpdateItemAsyncTask extends AsyncTask<Item, Void, Void> {
         private ItemDao itemDao;
+        private CategoryDao categoryDao;
 
-        private UpdateItemAsyncTask(ItemDao itemDao) {
+        private UpdateItemAsyncTask(ItemDao itemDao, CategoryDao categoryDao) {
             this.itemDao = itemDao;
+            this.categoryDao = categoryDao;
         }
 
         @Override
         protected Void doInBackground(Item... items) {
-            itemDao.update(items[0]);
+            Item item = items[0];
+            Category category = categoryDao.getCategory(item.categoryId);
+            if (category != null) SyncJob.getInstance().update(item, category.uuid);
+            else SyncJob.getInstance().update(item);
+            itemDao.update(item);
             return null;
         }
     }
@@ -197,6 +201,8 @@ public class ItemRepository {
 
         @Override
         protected Void doInBackground(Void... voids) {
+            List<Item> completed = itemDao.getCompleted();
+            for (Item item : completed) SyncJob.getInstance().delete(item);
             itemDao.deleteCompleted();
             return null;
         }

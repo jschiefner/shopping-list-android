@@ -10,9 +10,6 @@ import android.view.ViewGroup;
 import com.jschiefner.shoppinglist.R;
 import com.jschiefner.shoppinglist.ShoppingFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 

@@ -27,10 +27,6 @@ public class RuleViewModel extends AndroidViewModel {
         repository.delete(rule);
     }
 
-    public void delete(String name) {
-        repository.delete(name);
-    }
-
     public void getRuleWithCategory(String name, QueryHandler handler) {
         repository.getRuleWithCategory(name, handler);
     }

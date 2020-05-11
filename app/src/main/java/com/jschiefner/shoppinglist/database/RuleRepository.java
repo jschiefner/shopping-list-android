@@ -3,30 +3,30 @@ package com.jschiefner.shoppinglist.database;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import com.jschiefner.shoppinglist.sync.SyncJob;
+
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
 public class RuleRepository {
     private RuleDao ruleDao;
+    private CategoryDao categoryDao;
     private LiveData<List<Rule>> categoryRules;
 
     public RuleRepository(Application application, long categoryId) {
         ItemDatabase database = ItemDatabase.getInstance(application);
         ruleDao = database.ruleDao();
+        categoryDao = database.categoryDao();
         categoryRules = ruleDao.getCategoryRules(categoryId);
     }
 
     public void insert(Rule rule) {
-        new InsertRuleTask(ruleDao).execute(rule);
+        new InsertRuleTask(ruleDao, categoryDao).execute(rule);
     }
 
     public void delete(Rule rule) {
         new DeleteRuleTask(ruleDao).execute(rule);
-    }
-
-    public void delete(String itemName) {
-        new DeleteRuleByNameTask(ruleDao).execute(itemName);
     }
 
     public void getRuleWithCategory(String name, QueryHandler handler) {
@@ -39,14 +39,19 @@ public class RuleRepository {
 
     private static class InsertRuleTask extends AsyncTask<Rule, Void, Void> {
         private RuleDao ruleDao;
+        private CategoryDao categoryDao;
 
-        private InsertRuleTask(RuleDao ruleDao) {
+        private InsertRuleTask(RuleDao ruleDao, CategoryDao categoryDao) {
             this.ruleDao = ruleDao;
+            this.categoryDao = categoryDao;
         }
 
         @Override
         protected Void doInBackground(Rule... rules) {
-            ruleDao.insert(rules[0]);
+            Rule rule = rules[0];
+            Category category = categoryDao.getCategory(rule.categoryId);
+            SyncJob.getInstance().create(rule, category.uuid);
+            ruleDao.insert(rule);
             return null;
         }
     }
@@ -61,20 +66,6 @@ public class RuleRepository {
         @Override
         protected Void doInBackground(Rule... rules) {
             ruleDao.delete(rules[0]);
-            return null;
-        }
-    }
-
-    private static class DeleteRuleByNameTask extends AsyncTask<String, Void, Void> {
-        private RuleDao ruleDao;
-
-        private DeleteRuleByNameTask(RuleDao ruleDao) {
-            this.ruleDao = ruleDao;
-        }
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            ruleDao.delete(strings[0]);
             return null;
         }
     }

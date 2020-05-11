@@ -30,6 +30,12 @@ public class Rule implements com.jschiefner.shoppinglist.sync.Entity {
         this.uuid = UUID.randomUUID();
     }
 
+    public Rule(String name, long categoryId, String uuid) {
+        this.name = name;
+        this.categoryId = categoryId;
+        this.uuid = UUID.fromString(uuid);
+    }
+
     @Override
     public com.jschiefner.shoppinglist.sync.Entity fromMap(Map<String, String> map) {
         return null;

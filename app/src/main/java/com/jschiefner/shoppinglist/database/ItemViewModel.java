@@ -18,10 +18,6 @@ public class ItemViewModel extends AndroidViewModel {
         items = repository.getItems();
     }
 
-    public void insert(Item item) {
-        repository.insert(item);
-    }
-
     public void insert(Item item, Category category, Rule ruleToDelete, boolean deleteRule, boolean addRule) {
         repository.insert(item, category, ruleToDelete, deleteRule, addRule);
     }

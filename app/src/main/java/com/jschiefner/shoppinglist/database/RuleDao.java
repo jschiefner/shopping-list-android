@@ -24,6 +24,9 @@ public interface RuleDao {
     @Query("select * from rule where name like '%' || :name || '%'")
     RuleWithCategory getRuleWithCategory(String name);
 
+    @Query("select * from rule where uuid = :uuid")
+    Rule getRule(String uuid);
+
     @Insert
     long insert(Rule rule);
 

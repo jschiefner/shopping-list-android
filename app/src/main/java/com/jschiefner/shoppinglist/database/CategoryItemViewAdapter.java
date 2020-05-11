@@ -45,11 +45,9 @@ public class CategoryItemViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
 
             if (current == 0) {
-                Log.i("CUSTOM", "position: " + position + " header");
                 listStore[position] = categoryWithItems.category;
                 return R.layout.header_recycler_view;
             } else {
-                Log.i("CUSTOM", "position: " + position + " item");
                 listStore[position] = categoryWithItems.items.get(current-1);
                 return R.layout.item_recycler_view;
             }
