@@ -1,6 +1,5 @@
 package com.jschiefner.shoppinglist.sync;
 
-import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -32,19 +31,19 @@ public class SyncJob implements Callback {
     private static SyncJob instance;
     private Runnable runnable;
     private Handler handler = new Handler(Looper.getMainLooper());
-    private static final String BASE_URL = "https://1ed7b55.online-server.cloud/";
+    private static final String URL = "https://1ed7b55.online-server.cloud/shopping/batch/";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final OkHttpClient client = new OkHttpClient();
-    public static final int INTERVAL = 1000 * 10;
+    private static final int INTERVAL = 1000 * 10;
+    private String authorization;
 
     private volatile JSONArray entities;
-
-    private static int counter = 0;
 
     public static SyncJob getInstance() {
         if (instance == null) {
             instance = new SyncJob();
             instance.entities = new JSONArray();
+            instance.authorization = "Bearer " + PreferenceManager.getInstance(MainActivity.instance).getToken();
         }
         return instance;
     }
@@ -87,24 +86,21 @@ public class SyncJob implements Callback {
     }
 
     public void perform() {
-        Log.i("CUSTOM", "called perform times: " + counter++);
+        Log.i("CUSTOM", "called perform");
 
         // TODO: think about better ways as to start as few threads as possible
         handler.removeCallbacks(runnable);
-        runnable = () -> {
-            Log.i("CUSTOM", "job got triggered");
-            // send data to server to server
-            request();
-        };
+        runnable = this::request;
         handler.postAtTime(runnable, System.currentTimeMillis() + INTERVAL);
         handler.postDelayed(runnable, INTERVAL);
     }
 
     private void request() {
         // TODO: don't rely on the MainActivity to be open, it may be stopped while the app is paused
+        Log.i("CUSTOM", "job got triggered");
         Request request = new Request.Builder()
-                .url(BASE_URL + "shopping/batch")
-                .header("Authorization", "Bearer " + PreferenceManager.getInstance(MainActivity.instance).getToken())
+                .url(URL)
+                .header("Authorization", authorization)
                 .post(new RequestBody() {
                     @Nullable
                     @Override
