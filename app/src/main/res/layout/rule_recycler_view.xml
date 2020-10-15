@@ -6,7 +6,7 @@
     android:outlineProvider="none">
 
     <TextView
-        android:id="@+id/recycler_text_view"
+        android:id="@+id/rule_text_view"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_gravity="center"

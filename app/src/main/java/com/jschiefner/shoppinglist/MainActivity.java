@@ -11,7 +11,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
     public static MainActivity instance;
-    private long categoryId;
+    private Category category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +60,13 @@ public class MainActivity extends AppCompatActivity {
         instance = null;
     }
 
-//    public long getCategoryID() {
-//        return categoryId;
-//    }
-//
-//    public void setCategoryId(long categoryId) {
-//        this.categoryId = categoryId;
-//    }
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public void setActionBarTitle(int resId) {
         getSupportActionBar().setTitle(resId);

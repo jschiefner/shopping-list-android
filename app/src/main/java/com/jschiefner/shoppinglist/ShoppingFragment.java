@@ -12,6 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +40,8 @@ public class ShoppingFragment extends Fragment {
 
         fab = getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(view -> handleFabClick());
+
+        NavHostFragment.findNavController(ShoppingFragment.instance).navigate(R.id.category_fragment); // TODO: remove this
 
         return rootView;
     }

@@ -6,7 +6,7 @@
     android:outlineProvider="none">
 
     <Button
-        android:id="@+id/recycler_text_view"
+        android:id="@+id/recycler_category_button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"

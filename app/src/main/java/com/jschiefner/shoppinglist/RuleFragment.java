@@ -1,6 +1,7 @@
 package com.jschiefner.shoppinglist;
 
 import android.os.Bundle;
+import android.telephony.RadioAccessSpecifier;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firestore.v1.DocumentMask;
+
+import java.util.Set;
 
 public class RuleFragment extends Fragment {
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
+    private RuleAdapter adapter;
+    private DocumentReference documentRef;
+    private Category category;
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
 
     @Override
@@ -30,13 +42,17 @@ public class RuleFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.rule_fragment, container, false);
 
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.setActionBarTitle(R.string.rule_fragment_label);
+        category = MainActivity.instance.getCategory();
+        documentRef = db.collection("categories").document(category.getId());
+        MainActivity.instance.setActionBarTitle(R.string.rule_fragment_label);
 
-        // TODO: init recycler view
-
-//        long categoryId = mainActivity.getCategoryID();
-        // TODO: get category id from main activity
+        // init recycler view
+        recyclerView = rootView.findViewById(R.id.rules_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // recyclerView.setHasFixedSize(true); // skip for now
+        adapter = new RuleAdapter();
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, swipeFlags) {
             @Override
@@ -46,7 +62,9 @@ public class RuleFragment extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // TODO: delete rule where swiped
+                category.getRules().remove(viewHolder.getAdapterPosition());
+                documentRef.set(category, SetOptions.merge());
+                adapter.notifyDataSetChanged();
             }
         }).attachToRecyclerView(recyclerView);
 
@@ -91,7 +109,8 @@ public class RuleFragment extends Fragment {
     }
 
     private void addRule(String name) {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        // TODO: save new rule with mainActivity.getCategoryId()
+        // Todo: save new Rule
+        category.getRules().add(name);
+        documentRef.set(category, SetOptions.merge());
     }
 }
