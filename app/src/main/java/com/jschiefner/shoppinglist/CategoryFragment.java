@@ -19,15 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.jschiefner.shoppinglist.database.Category;
-import com.jschiefner.shoppinglist.database.CategoryViewAdapter;
-import com.jschiefner.shoppinglist.database.CategoryViewModel;
-import com.jschiefner.shoppinglist.database.CategoryViewModelFactory;
 
 public class CategoryFragment extends Fragment {
     private RecyclerView recyclerView;
-    private CategoryViewModel categoryViewModel;
-    private final CategoryViewAdapter adapter = new CategoryViewAdapter();
     private FloatingActionButton fab;
     public static CategoryFragment instance;
 
@@ -41,14 +35,7 @@ public class CategoryFragment extends Fragment {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setActionBarTitle(R.string.category_fragment_label);
 
-        recyclerView = rootView.findViewById(R.id.categories_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-
-        categoryViewModel = ViewModelProviders.of(this, new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
-        categoryViewModel.getCategories().observe(this, categories -> adapter.setCategories(categories));
+        // TODO: setup recyclerview
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, swipeFlags) {
             @Override
@@ -58,9 +45,7 @@ public class CategoryFragment extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                CategoryViewAdapter.CategoryViewHolder holder = (CategoryViewAdapter.CategoryViewHolder) viewHolder;
-                Category category = holder.category;
-                categoryViewModel.delete(category);
+                // TODO: delete category that was swiped
             }
         }).attachToRecyclerView(recyclerView);
 
@@ -119,8 +104,7 @@ public class CategoryFragment extends Fragment {
     }
 
     private void addCategory(String name) {
-        Category category = new Category(name);
-        categoryViewModel.insert(category);
+        // TODO: create new Category from teh passed name
     }
 
 }

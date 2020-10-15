@@ -1,9 +1,10 @@
-package com.jschiefner.shoppinglist.database;
+package com.jschiefner.shoppinglist;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import com.jschiefner.shoppinglist.Item;
 import com.jschiefner.shoppinglist.ItemDialog;
 import com.jschiefner.shoppinglist.R;
 import com.jschiefner.shoppinglist.ShoppingFragment;
@@ -33,23 +34,26 @@ public class ItemSwipeTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        if (viewHolder instanceof ItemViewHolder) return makeMovementFlags(0, swipeFlags);
-        else return makeMovementFlags(0, 0);
+//        if (viewHolder instanceof ItemViewHolder) return makeMovementFlags(0, swipeFlags);
+//        else return makeMovementFlags(0, 0);
+        // make everything swipable for now
+        return swipeFlags;
     }
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        ItemViewHolder holder = (ItemViewHolder) viewHolder;
-        Item item = holder.item;
-        switch (direction) {
-            case ItemTouchHelper.LEFT:
-                ShoppingFragment.instance.itemViewModel.delete(item);
-                break;
-            case ItemTouchHelper.RIGHT:
-                adapter.notifyItemChanged(viewHolder.getAdapterPosition());
-                new ItemDialog(item).show();
-                break;
-        }
+//        ItemViewHolder holder = (ItemViewHolder) viewHolder;
+//        Item item = holder.item;
+//        switch (direction) {
+//            case ItemTouchHelper.LEFT:
+//                ShoppingFragment.instance.itemViewModel.delete(item);
+//                break;
+//            case ItemTouchHelper.RIGHT:
+//                adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+//                new ItemDialog(item).show();
+//                break;
+//        }
+        // TODO: edit or delete item
     }
 
     @Override

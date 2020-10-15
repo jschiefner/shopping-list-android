@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 if (ShoppingFragment.instance != null) NavHostFragment.findNavController(ShoppingFragment.instance).navigate(R.id.category_fragment);
                 return true;
             case R.id.action_delete_completed:
-                if (ShoppingFragment.instance != null) ShoppingFragment.instance.itemViewModel.deleteCompleted();
+                // TODO: delete all where completed == true
                 return true;
         }
 
@@ -60,13 +60,13 @@ public class MainActivity extends AppCompatActivity {
         instance = null;
     }
 
-    public long getCategoryID() {
-        return categoryId;
-    }
-
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
-    }
+//    public long getCategoryID() {
+//        return categoryId;
+//    }
+//
+//    public void setCategoryId(long categoryId) {
+//        this.categoryId = categoryId;
+//    }
 
     public void setActionBarTitle(int resId) {
         getSupportActionBar().setTitle(resId);

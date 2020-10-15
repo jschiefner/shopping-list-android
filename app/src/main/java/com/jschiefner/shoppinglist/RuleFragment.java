@@ -18,15 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.jschiefner.shoppinglist.database.Rule;
-import com.jschiefner.shoppinglist.database.RuleViewAdapter;
-import com.jschiefner.shoppinglist.database.RuleViewModel;
-import com.jschiefner.shoppinglist.database.RuleViewModelFactory;
 
 public class RuleFragment extends Fragment {
     private RecyclerView recyclerView;
-    private RuleViewModel ruleViewModel;
-    private final RuleViewAdapter adapter = new RuleViewAdapter();
     private FloatingActionButton fab;
 
     private final int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
@@ -39,15 +33,10 @@ public class RuleFragment extends Fragment {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setActionBarTitle(R.string.rule_fragment_label);
 
-        recyclerView = rootView.findViewById(R.id.rules_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+        // TODO: init recycler view
 
-        long categoryId = mainActivity.getCategoryID();
-        ruleViewModel = ViewModelProviders.of(this, new RuleViewModelFactory(getActivity().getApplication(), categoryId)).get(RuleViewModel.class);
-        ruleViewModel.getCategoryRules().observe(this, adapter::setCategoryRules);
+//        long categoryId = mainActivity.getCategoryID();
+        // TODO: get category id from main activity
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, swipeFlags) {
             @Override
@@ -57,9 +46,7 @@ public class RuleFragment extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                RuleViewAdapter.RuleViewHolder holder = (RuleViewAdapter.RuleViewHolder) viewHolder;
-                Rule rule = holder.rule;
-                ruleViewModel.delete(rule);
+                // TODO: delete rule where swiped
             }
         }).attachToRecyclerView(recyclerView);
 
@@ -105,7 +92,6 @@ public class RuleFragment extends Fragment {
 
     private void addRule(String name) {
         MainActivity mainActivity = (MainActivity) getActivity();
-        Rule rule = new Rule(name, mainActivity.getCategoryID());
-        ruleViewModel.insert(rule);
+        // TODO: save new rule with mainActivity.getCategoryId()
     }
 }
