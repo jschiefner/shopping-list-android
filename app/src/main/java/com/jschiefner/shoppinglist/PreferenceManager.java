@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 public class PreferenceManager {
     public static final String SHARED_PREF_NAME = "shared_pref_name";
     public static final String KEY_ACCESS_TOKEN = "token";
-    private static Context context;
+    private Context context;
     private static PreferenceManager instance;
 
     private PreferenceManager(Context context) {

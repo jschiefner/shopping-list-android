@@ -85,25 +85,24 @@ public class ItemRepository {
 
         @Override
         protected Void doInBackground(Void... voids) {
+            SyncJob syncJob = SyncJob.getInstance();
             if (category != null) {
                 Long categoryId = categoryDao.insert(category);
                 item.categoryId = categoryId;
-                SyncJob.getInstance()
-                        .create(category)
-                        .create(item, category.uuid);
+                syncJob.create(category).create(item, category.uuid);
             } else if (item.isCategorized()) {
                 Category existingCategory = categoryDao.getCategory(item.categoryId);
                 category = existingCategory;
-                SyncJob.getInstance().create(item, existingCategory.uuid);
-            } else SyncJob.getInstance().create(item);
+                syncJob.create(item, existingCategory.uuid);
+            } else syncJob.create(item);
             itemDao.insert(item);
             if (ruleToDelete != null && deleteRule) {
                 ruleDao.delete(ruleToDelete);
-                SyncJob.getInstance().delete(ruleToDelete);
+                syncJob.delete(ruleToDelete);
             }
             if (addRule) {
                 Rule ruleToAdd = new Rule(item.name, item.categoryId);
-                SyncJob.getInstance().create(ruleToAdd, category.uuid);
+                syncJob.create(ruleToAdd, category.uuid);
                 ruleDao.insert(ruleToAdd);
             }
             return null;
@@ -133,25 +132,24 @@ public class ItemRepository {
 
         @Override
         protected Void doInBackground(Void... voids) {
+            SyncJob syncJob = SyncJob.getInstance();
             if (category != null) {
                 Long categoryId = categoryDao.insert(category);
                 item.categoryId = categoryId;
-                SyncJob.getInstance()
-                        .update(item, category.uuid)
-                        .create(category);
+                syncJob.create(category).update(item, category.uuid);
             } else if (item.isCategorized()) {
                 Category existingCategory = categoryDao.getCategory(item.categoryId);
                 category = existingCategory;
-                SyncJob.getInstance().update(item, existingCategory.uuid);
-            } else SyncJob.getInstance().update(item);
+                syncJob.update(item, existingCategory.uuid);
+            } else syncJob.update(item);
             itemDao.update(item);
             if (ruleToDelete != null && deleteRule) {
                 ruleDao.delete(ruleToDelete);
-                SyncJob.getInstance().delete(ruleToDelete);
+                syncJob.delete(ruleToDelete);
             }
             if (addRule) {
                 Rule ruleToAdd = new Rule(item.name, item.categoryId);
-                SyncJob.getInstance().create(ruleToAdd, category.uuid);
+                syncJob.create(ruleToAdd, category.uuid);
                 ruleDao.insert(new Rule(item.name, item.categoryId));
             }
             return null;
@@ -171,8 +169,9 @@ public class ItemRepository {
         protected Void doInBackground(Item... items) {
             Item item = items[0];
             Category category = categoryDao.getCategory(item.categoryId);
-            if (category != null) SyncJob.getInstance().update(item, category.uuid);
-            else SyncJob.getInstance().update(item);
+            SyncJob syncJob = SyncJob.getInstance();
+            if (category != null) syncJob.update(item, category.uuid);
+            else syncJob.update(item);
             itemDao.update(item);
             return null;
         }
@@ -202,7 +201,8 @@ public class ItemRepository {
         @Override
         protected Void doInBackground(Void... voids) {
             List<Item> completed = itemDao.getCompleted();
-            for (Item item : completed) SyncJob.getInstance().delete(item);
+            SyncJob syncJob = SyncJob.getInstance();
+            for (Item item : completed) syncJob.delete(item);
             itemDao.deleteCompleted();
             return null;
         }

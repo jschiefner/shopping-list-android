@@ -96,7 +96,6 @@ public class SyncJob implements Callback {
     }
 
     private void request() {
-        // TODO: don't rely on the MainActivity to be open, it may be stopped while the app is paused
         Log.i("CUSTOM", "job got triggered");
         Request request = new Request.Builder()
                 .url(URL)
