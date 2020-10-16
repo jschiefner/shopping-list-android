@@ -13,58 +13,40 @@
         android:focusable="true"
         android:focusableInTouchMode="true">
 
-        <LinearLayout
-            android:id="@+id/empty_cart_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/cart"
-                android:layout_marginRight="110dp"
-                android:layout_marginLeft="90dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-120dp"
-                android:lineSpacingExtra="5sp"
-                android:text="@string/nothing_here_yet"
-                android:textAlignment="center"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/items_recycler_view"
-            android:layout_width="wrap_content"
+            android:id="@+id/main_recycler_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:nestedScrollingEnabled="false"
             android:scrollbars="vertical"
             android:background="@color/transparent"/>
-
-        <TextView
-            android:id="@+id/uncategorized_items"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/uncategorized_items"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:visibility="gone"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/uncategorized_recycler_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:nestedScrollingEnabled="false"
-            android:scrollbars="vertical"
-            android:background="@color/transparent"
-            android:layout_marginBottom="40dp" />
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
+
+<!-- TODO: add cart layout in the future -->
+<!--<LinearLayout-->
+<!--android:id="@+id/empty_cart_layout"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:orientation="vertical"-->
+<!--android:visibility="gone">-->
+
+<!--<ImageView-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:src="@drawable/cart"-->
+<!--    android:layout_marginRight="110dp"-->
+<!--    android:layout_marginLeft="90dp"/>-->
+
+<!--<TextView-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_marginTop="-120dp"-->
+<!--    android:lineSpacingExtra="5sp"-->
+<!--    android:text="@string/nothing_here_yet"-->
+<!--    android:textAlignment="center"-->
+<!--    android:textSize="18sp" />-->
+
+<!--</LinearLayout>-->

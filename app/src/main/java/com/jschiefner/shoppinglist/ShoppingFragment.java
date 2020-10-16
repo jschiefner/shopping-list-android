@@ -7,7 +7,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -19,9 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ShoppingFragment extends Fragment {
     private RecyclerView recyclerView;
-    private LinearLayout emptyCartLayout;
-    private TextView uncategorizedItemsHeader;
     private FloatingActionButton fab;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference categoriesRef = db.collection("categories");
+    private ShoppingCategoryAdapter adapter;
     public static ShoppingFragment instance;
     private final int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
 
@@ -34,20 +40,28 @@ public class ShoppingFragment extends Fragment {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setActionBarTitle(R.string.shopping_fragment_label);
 
-        emptyCartLayout = rootView.findViewById(R.id.empty_cart_layout);
-
-        // TODO: set up new recycler view
+        FirestoreRecyclerOptions<Category> options = new FirestoreRecyclerOptions.Builder<Category>()
+                .setQuery(categoriesRef, Category.class)
+                .build();
+        adapter = new ShoppingCategoryAdapter(options);
+        recyclerView = rootView.findViewById(R.id.main_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
 
         fab = getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(view -> handleFabClick());
-
-        NavHostFragment.findNavController(ShoppingFragment.instance).navigate(R.id.category_fragment); // TODO: remove this
 
         return rootView;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
     }
 
     @Override
@@ -60,6 +74,12 @@ public class ShoppingFragment extends Fragment {
     public void onPause() {
         super.onPause();
         instance = null;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
     public void handleFabClick() {

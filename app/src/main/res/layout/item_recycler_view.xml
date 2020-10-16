@@ -25,7 +25,7 @@
             android:layout_marginTop="5dp" />
 
         <EditText
-            android:id="@+id/recycler_edit_text"
+            android:id="@+id/item_edit_text"
             android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:layout_row="0"

@@ -48,9 +48,8 @@ public class CategoryFragment extends Fragment {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setActionBarTitle(R.string.category_fragment_label);
 
-        Query query = categoriesRef;
         FirestoreRecyclerOptions<Category> options = new FirestoreRecyclerOptions.Builder<Category>()
-                .setQuery(query, Category.class)
+                .setQuery(categoriesRef, Category.class)
                 .build();
         adapter = new CategoryAdapter(options);
         recyclerView = rootView.findViewById(R.id.categories_recycler_view);
