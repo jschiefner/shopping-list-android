@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.w3c.dom.Text;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,8 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference itemsRef;
     private ItemAdapter adapter;
+
+    private static final int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
 
     public ShoppingCategoryAdapter(@NonNull FirestoreRecyclerOptions<Category> options) {
         super(options);
@@ -40,6 +43,9 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         adapter = new ItemAdapter(options);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.instance));
         holder.recyclerView.setAdapter(adapter);
+
+        // add swipe helper
+        new ItemTouchHelper(new ItemSwipeTouchHelper(ShoppingFragment.instance, adapter, 0, swipeFlags)).attachToRecyclerView(holder.recyclerView);
 
         // stop listening for all adapters when MainActivity exits
         adapter.startListening();

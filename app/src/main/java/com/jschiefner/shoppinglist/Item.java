@@ -1,7 +1,11 @@
 package com.jschiefner.shoppinglist;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Exclude;
+
 public class Item {
     private String id;
+    private DocumentReference reference;
     private String name;
     private boolean completed;
 
@@ -14,12 +18,22 @@ public class Item {
         this.completed = completed;
     }
 
+    @Exclude
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Exclude
+    public DocumentReference getReference() {
+        return reference;
+    }
+
+    public void setReference(DocumentReference reference) {
+        this.reference = reference;
     }
 
     public String getName() {

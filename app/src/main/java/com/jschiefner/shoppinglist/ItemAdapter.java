@@ -19,6 +19,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
     @Override
     protected void onBindViewHolder(@NonNull ItemHolder holder, int position, @NonNull Item model) {
         model.setId(getSnapshots().getSnapshot(position).getId());
+        model.setReference(getSnapshots().getSnapshot(position).getReference());
         holder.item = model;
         holder.editText.setText(model.getName());
     }
