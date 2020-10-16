@@ -5,7 +5,11 @@ import com.google.firebase.firestore.Exclude;
 
 public class Item {
     private String id;
+
+    // TODO: use category to build reference from id and categoryId, woudnt necessarily need the categoy anymore
     private DocumentReference reference;
+    private Category category;
+
     private String name;
     private boolean completed;
 
@@ -34,6 +38,15 @@ public class Item {
 
     public void setReference(DocumentReference reference) {
         this.reference = reference;
+    }
+
+    @Exclude
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public String getName() {

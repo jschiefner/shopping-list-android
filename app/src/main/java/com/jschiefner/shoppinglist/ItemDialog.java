@@ -16,6 +16,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +39,15 @@ public class ItemDialog implements View.OnClickListener, Spinner.OnItemSelectedL
     private TextView ruleAddText;
 
     private AlertDialog.Builder builder;
-    private List<String> categories;
     private AlertDialog dialog;
     private View layout;
 
     private Item itemToEdit;
     private Rule ruleToDelete;
+    private List<Category> categories;
+
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference categoriesRef = db.collection("categories");
 
     public ItemDialog() {
         builder = new AlertDialog.Builder(ShoppingFragment.instance.getContext());
@@ -55,11 +64,27 @@ public class ItemDialog implements View.OnClickListener, Spinner.OnItemSelectedL
         ruleAddCheckbox = layout.findViewById(R.id.checkbox_rule_to_add);
         ruleAddText = layout.findViewById(R.id.text_rule_to_add);
 
-        categories = getCategoryStringList();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(ShoppingFragment.instance.getContext(), R.layout.support_simple_spinner_dropdown_item, categories);
-        // spinner.setAdapter(adapter); TODO: set spinner adapter
-        spinner.setSelection(categories.size()-2);
+        categoriesRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            categories = new ArrayList<>(queryDocumentSnapshots.size());
+            List<String> categoryStrings = new ArrayList<>(queryDocumentSnapshots.size());
+            int position = 0;
+            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                Category category = documentSnapshot.toObject(Category.class);
+                category.setId(documentSnapshot.getId());
+                categories.add(category);
+                categoryStrings.add(category.getName());
 
+                // set spinner if there is an itemToEdit
+                if (itemToEdit != null) {
+                    if (itemToEdit.getCategory().getId().equals(category.getId())) {
+                        spinner.setSelection(position); // TODO: this doesnt work weil der Spinner hier noch nicht befüllt wurde geschieht ja erst in ein paar zeilen teehee, position also hier rausfinden, merken und dann nach befüllen setzen!
+                    }
+                    position += 1;
+                }
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(ShoppingFragment.instance.getContext(), R.layout.support_simple_spinner_dropdown_item, categoryStrings);
+            spinner.setAdapter(adapter);
+        });
         saveButton.setOnClickListener(this);
         itemNameInput.setOnEditorActionListener(this::itemNameInputChange);
         newCategoryEdit.setOnEditorActionListener(this::newCategoryInputChange);
@@ -72,16 +97,13 @@ public class ItemDialog implements View.OnClickListener, Spinner.OnItemSelectedL
     public ItemDialog(Item item) {
         this(); // call constructor without any parameters
         this.itemToEdit = item;
-//        TextView title = layout.findViewById(R.id.item_dialog_title);
-//        title.setText(R.string.edit_item_head);
-//        itemNameInput.setText(item.name);
-//        if (item.isCategorized()) {
-//            List<CategoryWithItems> categoryWithItems = ShoppingFragment.instance.categoriesWithItems;
-//            for (int position = 0; position < ShoppingFragment.instance.categoriesWithItems.size(); position++) {
-//                if (!categoryWithItems.get(position).items.contains(item)) continue;
-//                spinner.setSelection(position);
-//                break;
-//            }
+        TextView title = layout.findViewById(R.id.item_dialog_title);
+        title.setText(R.string.edit_item_head);
+        itemNameInput.setText(item.getName());
+//        for (int position = 0; position < ShoppingFragment.instance.categoriesWithItems.size(); position++) {
+//            if (!categoryWithItems.get(position).items.contains(item)) continue;
+//            spinner.setSelection(position);
+//            break;
 //        }
     }
 

@@ -40,7 +40,7 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
                 .setQuery(itemsRef, Item.class)
                 .build();
-        adapter = new ItemAdapter(options);
+        adapter = new ItemAdapter(options, model);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.instance));
         holder.recyclerView.setAdapter(adapter);
 
