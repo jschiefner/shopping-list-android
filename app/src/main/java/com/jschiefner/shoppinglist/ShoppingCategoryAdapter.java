@@ -40,7 +40,10 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         adapter = new ItemAdapter(options);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.instance));
         holder.recyclerView.setAdapter(adapter);
-        adapter.startListening(); // TODO: add method in fragment to batch start/stop all adapters!
+
+        // stop listening for all adapters when MainActivity exits
+        adapter.startListening();
+        MainActivity.instance.itemAdapters.add(adapter);
     }
 
     @NonNull

@@ -9,9 +9,15 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     public static MainActivity instance;
     private Category category;
+    public List<ItemAdapter> itemAdapters = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         instance = null;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        itemAdapters.forEach(FirestoreRecyclerAdapter::stopListening);
     }
 
     public Category getCategory() {
