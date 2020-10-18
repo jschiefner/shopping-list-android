@@ -1,15 +1,21 @@
 package com.jschiefner.shoppinglist;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.firebase.ui.common.ChangeEventType;
+import com.firebase.ui.firestore.ChangeEventListener;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.util.CustomClassMapper;
 
 import org.w3c.dom.Text;
 
@@ -43,6 +49,27 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         adapter = new ItemAdapter(options, model);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.instance));
         holder.recyclerView.setAdapter(adapter);
+        adapter.getSnapshots().addChangeEventListener(new ChangeEventListener() {
+            @Override
+            public void onChildChanged(@NonNull ChangeEventType type, @NonNull DocumentSnapshot snapshot, int newIndex, int oldIndex) {
+                switch (type) {
+                    case ADDED: {
+                        if (holder.categoryName.getVisibility() == View.GONE) holder.categoryName.setVisibility(View.VISIBLE);
+                        break;
+                    }
+                    case REMOVED: {
+                        if (adapter.getItemCount() == 0) holder.categoryName.setVisibility(View.GONE);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onDataChanged() {}
+
+            @Override
+            public void onError(@NonNull FirebaseFirestoreException e) {}
+        });
 
         // add swipe helper
         new ItemTouchHelper(new ItemSwipeTouchHelper(ShoppingFragment.instance, adapter, 0, swipeFlags)).attachToRecyclerView(holder.recyclerView);
