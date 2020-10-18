@@ -67,23 +67,22 @@ public class ItemDialog implements View.OnClickListener, Spinner.OnItemSelectedL
         categoriesRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
             categories = new ArrayList<>(queryDocumentSnapshots.size());
             List<String> categoryStrings = new ArrayList<>(queryDocumentSnapshots.size());
-            int position = 0;
+            int counter = 0, position = 0;
             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                 Category category = documentSnapshot.toObject(Category.class);
                 category.setId(documentSnapshot.getId());
                 categories.add(category);
                 categoryStrings.add(category.getName());
 
-                // set spinner if there is an itemToEdit
+                // remember position for spinner
                 if (itemToEdit != null) {
-                    if (itemToEdit.getCategory().getId().equals(category.getId())) {
-                        spinner.setSelection(position); // TODO: this doesnt work weil der Spinner hier noch nicht befüllt wurde geschieht ja erst in ein paar zeilen teehee, position also hier rausfinden, merken und dann nach befüllen setzen!
-                    }
-                    position += 1;
+                    if (itemToEdit.getCategory().getId().equals(category.getId())) position = counter;
+                    counter += 1;
                 }
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(ShoppingFragment.instance.getContext(), R.layout.support_simple_spinner_dropdown_item, categoryStrings);
             spinner.setAdapter(adapter);
+            if (itemToEdit != null) spinner.setSelection(position);
         });
         saveButton.setOnClickListener(this);
         itemNameInput.setOnEditorActionListener(this::itemNameInputChange);
@@ -100,11 +99,6 @@ public class ItemDialog implements View.OnClickListener, Spinner.OnItemSelectedL
         TextView title = layout.findViewById(R.id.item_dialog_title);
         title.setText(R.string.edit_item_head);
         itemNameInput.setText(item.getName());
-//        for (int position = 0; position < ShoppingFragment.instance.categoriesWithItems.size(); position++) {
-//            if (!categoryWithItems.get(position).items.contains(item)) continue;
-//            spinner.setSelection(position);
-//            break;
-//        }
     }
 
     public void show() {

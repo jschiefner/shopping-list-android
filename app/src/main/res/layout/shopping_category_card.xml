@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shopping_category_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:outlineProvider="none"
     android:backgroundTint="@color/transparent"
     android:layout_marginTop="10dp"
-    android:layout_marginHorizontal="10dp">
+    android:layout_marginHorizontal="10dp"
+    android:visibility="gone">
 
     <TextView
         android:id="@+id/main_category_name"
@@ -16,15 +18,14 @@
         android:textStyle="bold"
         tools:text="Category"
         android:textColor="@color/black"
-        android:visibility="gone"
         android:textSize="16sp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/items_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:nestedScrollingEnabled="false"
+        android:layout_marginTop="16dp"
         android:scrollbars="vertical"
         android:background="@color/transparent"/>
 

@@ -4,12 +4,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.common.ChangeEventType;
 import com.firebase.ui.firestore.ChangeEventListener;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.api.Distribution;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -20,6 +23,7 @@ import com.google.firebase.firestore.util.CustomClassMapper;
 import org.w3c.dom.Text;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,11 +58,11 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
             public void onChildChanged(@NonNull ChangeEventType type, @NonNull DocumentSnapshot snapshot, int newIndex, int oldIndex) {
                 switch (type) {
                     case ADDED: {
-                        if (holder.categoryName.getVisibility() == View.GONE) holder.categoryName.setVisibility(View.VISIBLE);
+                        holder.show();
                         break;
                     }
                     case REMOVED: {
-                        if (adapter.getItemCount() == 0) holder.categoryName.setVisibility(View.GONE);
+                        holder.hide();
                         break;
                     }
                 }
@@ -87,14 +91,42 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
     }
 
     class CategoryHolder extends RecyclerView.ViewHolder {
+        CardView shoppingCategoryCard;
         TextView categoryName;
         RecyclerView recyclerView;
         Category category;
+        boolean visible;
 
         public CategoryHolder(@NonNull View itemView) {
             super(itemView);
+            shoppingCategoryCard = itemView.findViewById(R.id.shopping_category_card);
             recyclerView = itemView.findViewById(R.id.items_recycler_view);
             categoryName = itemView.findViewById(R.id.main_category_name);
+
+            // set default margins
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, -50, 0, 0);
+            shoppingCategoryCard.setLayoutParams(params);
+            visible = false;
+        }
+
+        void show() {
+            if (visible) return;
+
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) shoppingCategoryCard.getLayoutParams();
+            params.setMargins(0, 16, 0, 0);
+            shoppingCategoryCard.setLayoutParams(params);
+            shoppingCategoryCard.setVisibility(View.VISIBLE);
+            visible = true;
+        }
+
+        void hide() {
+            if (!visible) return;
+            shoppingCategoryCard.setVisibility(View.GONE);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, -50, 0, 0);
+            shoppingCategoryCard.setLayoutParams(params);
+            visible = false;
         }
     }
 }
