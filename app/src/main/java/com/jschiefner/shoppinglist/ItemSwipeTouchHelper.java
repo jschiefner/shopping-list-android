@@ -4,11 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-import com.jschiefner.shoppinglist.Item;
-import com.jschiefner.shoppinglist.ItemDialog;
-import com.jschiefner.shoppinglist.R;
-import com.jschiefner.shoppinglist.ShoppingFragment;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -47,7 +42,7 @@ public class ItemSwipeTouchHelper extends ItemTouchHelper.SimpleCallback {
                 break;
             case ItemTouchHelper.RIGHT:
                 adapter.notifyItemChanged(viewHolder.getAdapterPosition());
-                new ItemDialog(item).show();
+                new EditItemDialog(item).show();
                 break;
         }
     }
