@@ -83,7 +83,7 @@ public class ShoppingFragment extends Fragment {
     }
 
     public void handleFabClick() {
-        new ItemDialog().show();
+        new NewItemDialog().show();
     }
 
     private void updateView() {

@@ -109,8 +109,7 @@ public class RuleFragment extends Fragment {
     }
 
     private void addRule(String name) {
-        // Todo: save new Rule
-        category.getRules().add(name);
+        category.getRules().add(name.toLowerCase());
         documentRef.set(category, SetOptions.merge());
     }
 }

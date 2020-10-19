@@ -62,7 +62,7 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
                         break;
                     }
                     case REMOVED: {
-                        holder.hide();
+                        if (adapter.getSnapshots().size() == 0) holder.hide();
                         break;
                     }
                 }
@@ -104,7 +104,7 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
             categoryName = itemView.findViewById(R.id.main_category_name);
 
             // set default margins
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) shoppingCategoryCard.getLayoutParams();
             params.setMargins(0, -50, 0, 0);
             shoppingCategoryCard.setLayoutParams(params);
             visible = false;
@@ -123,7 +123,7 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         void hide() {
             if (!visible) return;
             shoppingCategoryCard.setVisibility(View.GONE);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) shoppingCategoryCard.getLayoutParams();
             params.setMargins(0, -50, 0, 0);
             shoppingCategoryCard.setLayoutParams(params);
             visible = false;

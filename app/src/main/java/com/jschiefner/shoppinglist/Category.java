@@ -2,7 +2,9 @@ package com.jschiefner.shoppinglist;
 
 import com.google.firebase.firestore.Exclude;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Category {
@@ -17,6 +19,12 @@ public class Category {
     public Category(String name, List<String> rules) {
         this.name = name;
         this.rules = rules;
+    }
+
+    public Category(String name, String... rules) {
+        this.name = name;
+        this.rules = new ArrayList<String>(rules.length);
+        this.rules.addAll(Arrays.asList(rules));
     }
 
     public Category(String name) {
@@ -47,5 +55,13 @@ public class Category {
 
     public void setRules(List<String> rules) {
         this.rules = rules;
+    }
+
+    public void addRule(String rule) {
+        rules.add(rule);
+    }
+
+    public void deleteRule(String rule) {
+        rules.remove(rule);
     }
 }
