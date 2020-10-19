@@ -97,12 +97,12 @@ public class RuleFragment extends Fragment {
         dialog.show();
 
         saveButton.setOnClickListener(view1 -> {
-            addRule(ruleNameInput.getText().toString());
+            addRule(ruleNameInput.getText().toString().toLowerCase());
             dialog.dismiss();
         });
 
         ruleNameInput.setOnEditorActionListener((textView, i, keyEvent) -> {
-            addRule(ruleNameInput.getText().toString());
+            addRule(ruleNameInput.getText().toString().toLowerCase());
             dialog.dismiss();
             return true;
         });
