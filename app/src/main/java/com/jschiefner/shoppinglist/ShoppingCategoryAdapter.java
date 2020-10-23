@@ -53,27 +53,8 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         adapter = new ItemAdapter(options, model);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.instance));
         holder.recyclerView.setAdapter(adapter);
-        adapter.getSnapshots().addChangeEventListener(new ChangeEventListener() {
-            @Override
-            public void onChildChanged(@NonNull ChangeEventType type, @NonNull DocumentSnapshot snapshot, int newIndex, int oldIndex) {
-                switch (type) {
-                    case ADDED: {
-                        holder.show();
-                        break;
-                    }
-                    case REMOVED: {
-                        if (adapter.getSnapshots().size() == 0) holder.hide();
-                        break;
-                    }
-                }
-            }
 
-            @Override
-            public void onDataChanged() {}
-
-            @Override
-            public void onError(@NonNull FirebaseFirestoreException e) {}
-        });
+        adapter.getSnapshots().addChangeEventListener(holder);
 
         // add swipe helper
         new ItemTouchHelper(new ItemSwipeTouchHelper(ShoppingFragment.instance, adapter, 0, swipeFlags)).attachToRecyclerView(holder.recyclerView);
@@ -90,12 +71,11 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         return new CategoryHolder(view);
     }
 
-    class CategoryHolder extends RecyclerView.ViewHolder {
+    class CategoryHolder extends RecyclerView.ViewHolder implements ChangeEventListener {
         CardView shoppingCategoryCard;
         TextView categoryName;
         RecyclerView recyclerView;
         Category category;
-        boolean visible;
 
         public CategoryHolder(@NonNull View itemView) {
             super(itemView);
@@ -107,26 +87,49 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) shoppingCategoryCard.getLayoutParams();
             params.setMargins(0, -50, 0, 0);
             shoppingCategoryCard.setLayoutParams(params);
-            visible = false;
         }
 
         void show() {
-            if (visible) return;
+            if (shoppingCategoryCard.getVisibility() == View.VISIBLE) return;
 
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) shoppingCategoryCard.getLayoutParams();
             params.setMargins(0, 16, 0, 0);
             shoppingCategoryCard.setLayoutParams(params);
             shoppingCategoryCard.setVisibility(View.VISIBLE);
-            visible = true;
         }
 
         void hide() {
-            if (!visible) return;
+            if (shoppingCategoryCard.getVisibility() == View.GONE) return;
+
             shoppingCategoryCard.setVisibility(View.GONE);
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) shoppingCategoryCard.getLayoutParams();
             params.setMargins(0, -50, 0, 0);
             shoppingCategoryCard.setLayoutParams(params);
-            visible = false;
+        }
+
+        @Override
+        public void onChildChanged(@NonNull ChangeEventType type, @NonNull DocumentSnapshot snapshot, int newIndex, int oldIndex) {
+            switch (type) {
+                case ADDED: {
+                    show();
+                    break;
+                }
+                case REMOVED: {
+                    ItemAdapter adapter = (ItemAdapter) recyclerView.getAdapter();
+                    if (adapter.getSnapshots().size() == 0) hide();
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public void onDataChanged() {
+            // pass
+        }
+
+        @Override
+        public void onError(@NonNull FirebaseFirestoreException e) {
+            // pass
         }
     }
 }
