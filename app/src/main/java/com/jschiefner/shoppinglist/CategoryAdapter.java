@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, CategoryAdapter.CategoryHolder> {
+public class CategoryAdapter extends IgnoreChangesFirestoreRecyclerAdapter<Category, CategoryAdapter.CategoryHolder> {
     public CategoryAdapter(@NonNull FirestoreRecyclerOptions<Category> options) {
         super(options);
     }

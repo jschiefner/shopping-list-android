@@ -12,6 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,7 +30,6 @@ public class ShoppingFragment extends Fragment {
     private CollectionReference categoriesRef = db.collection("categories");
     private ShoppingCategoryAdapter adapter;
     public static ShoppingFragment instance;
-    private final int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class ShoppingFragment extends Fragment {
         mainActivity.setActionBarTitle(R.string.shopping_fragment_label);
 
         FirestoreRecyclerOptions<Category> options = new FirestoreRecyclerOptions.Builder<Category>()
-                .setQuery(categoriesRef, Category.class)
+                .setQuery(categoriesRef.orderBy("position", Query.Direction.ASCENDING), Category.class)
                 .build();
         adapter = new ShoppingCategoryAdapter(options);
         recyclerView = rootView.findViewById(R.id.main_recycler_view);
@@ -84,10 +84,5 @@ public class ShoppingFragment extends Fragment {
 
     public void handleFabClick() {
         new NewItemDialog().show();
-    }
-
-    private void updateView() {
-        // if (<no items>) emptyCartLayout.setVisibility(View.VISIBLE);
-        // else emptyCartLayout.setVisibility(View.GONE);
     }
 }

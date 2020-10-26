@@ -2,7 +2,6 @@ package com.jschiefner.shoppinglist;
 
 import com.google.firebase.firestore.Exclude;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +10,7 @@ public class Category {
     private String id;
     private String name;
     private List<String> rules;
+    private Double position;
 
     public Category() {
         // needed for firestore
@@ -19,17 +19,20 @@ public class Category {
     public Category(String name, List<String> rules) {
         this.name = name;
         this.rules = rules;
+        this.position = Double.MAX_VALUE;
     }
 
     public Category(String name, String... rules) {
         this.name = name;
-        this.rules = new ArrayList<String>(rules.length);
+        this.rules = new ArrayList<>(rules.length);
         this.rules.addAll(Arrays.asList(rules));
+        this.position = Double.MAX_VALUE;
     }
 
     public Category(String name) {
         this.name = name;
         this.rules = new ArrayList<>();
+        this.position = Double.MAX_VALUE;
     }
 
     @Exclude
@@ -63,5 +66,13 @@ public class Category {
 
     public void deleteRule(String rule) {
         rules.remove(rule);
+    }
+
+    public Double getPosition() {
+        return position;
+    }
+
+    public void setPosition(double position) {
+        this.position = position;
     }
 }
