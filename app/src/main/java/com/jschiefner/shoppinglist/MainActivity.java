@@ -10,6 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity instance;
     private Category category;
     public List<ItemAdapter> itemAdapters = new ArrayList<>();
+
+    private final CollectionReference categoriesRef = FirebaseFirestore.getInstance().collection("categories");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 if (ShoppingFragment.instance != null) NavHostFragment.findNavController(ShoppingFragment.instance).navigate(R.id.category_fragment);
                 return true;
             case R.id.action_delete_completed:
-                // TODO: delete all where completed == true
+                deleteCompleted();
                 return true;
         }
 
@@ -82,5 +91,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void setActionBarTitle(int resId) {
         getSupportActionBar().setTitle(resId);
+    }
+
+    private void deleteCompleted() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        categoriesRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            queryDocumentSnapshots.forEach(documentSnapshot -> {
+                documentSnapshot.getReference()
+                        .collection("items")
+                        .whereEqualTo("completed", true)
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                            if (queryDocumentSnapshots.isEmpty()) return;
+                            WriteBatch batch = db.batch(); // TODO: batch everything together instead of batching for each category
+                            queryDocumentSnapshots1.forEach(documentSnapshot1 -> batch.delete(documentSnapshot1.getReference()));
+                            batch.commit();
+                        });
+            });
+        });
     }
 }
