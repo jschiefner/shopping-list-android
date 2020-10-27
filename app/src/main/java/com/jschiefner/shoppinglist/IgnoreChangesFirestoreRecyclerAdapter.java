@@ -7,7 +7,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import static androidx.recyclerview.widget.RecyclerView.*;
+import static androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 public abstract class IgnoreChangesFirestoreRecyclerAdapter<T, VH extends ViewHolder> extends FirestoreRecyclerAdapter<T, VH> {
     private boolean mIgnoreChanges = false;

@@ -1,32 +1,24 @@
 package com.jschiefner.shoppinglist;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.firebase.ui.common.ChangeEventType;
-import com.firebase.ui.firestore.ChangeEventListener;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.api.Distribution;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.util.CustomClassMapper;
-
-import org.w3c.dom.Text;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.firebase.ui.common.ChangeEventType;
+import com.firebase.ui.firestore.ChangeEventListener;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, ShoppingCategoryAdapter.CategoryHolder> {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -42,7 +34,6 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
     @Override
     protected void onBindViewHolder(@NonNull CategoryHolder holder, int position, @NonNull Category model) {
         model.setId(getSnapshots().getSnapshot(position).getId());
-        holder.category = model;
         holder.categoryName.setText(model.getName());
 
         // fill recyclerview with model
@@ -72,13 +63,12 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         return new CategoryHolder(view);
     }
 
-    class CategoryHolder extends RecyclerView.ViewHolder implements ChangeEventListener {
+    static class CategoryHolder extends RecyclerView.ViewHolder implements ChangeEventListener {
         CardView shoppingCategoryCard;
         TextView categoryName;
         RecyclerView recyclerView;
-        Category category;
 
-        public CategoryHolder(@NonNull View itemView) {
+        CategoryHolder(@NonNull View itemView) {
             super(itemView);
             shoppingCategoryCard = itemView.findViewById(R.id.shopping_category_card);
             recyclerView = itemView.findViewById(R.id.items_recycler_view);

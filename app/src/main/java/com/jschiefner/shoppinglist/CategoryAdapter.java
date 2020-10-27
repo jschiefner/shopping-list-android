@@ -4,16 +4,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
-
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-
-import java.util.concurrent.CancellationException;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class CategoryAdapter extends IgnoreChangesFirestoreRecyclerAdapter<Category, CategoryAdapter.CategoryHolder> {
     public CategoryAdapter(@NonNull FirestoreRecyclerOptions<Category> options) {

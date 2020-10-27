@@ -1,21 +1,16 @@
 package com.jschiefner.shoppinglist;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.view.Menu;
-import android.view.MenuItem;
-
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
@@ -79,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         itemAdapters.forEach(FirestoreRecyclerAdapter::stopListening);
+        itemAdapters.clear();
     }
 
     public Category getCategory() {

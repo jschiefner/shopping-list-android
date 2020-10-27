@@ -1,22 +1,14 @@
 package com.jschiefner.shoppinglist;
 
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 // TODO: make NewITemDialog and EditItemDialog inherit from ItemDialog (abstract) where common methods such as itemNameInputChange are defined
 public class NewItemDialog extends ItemDialog {
