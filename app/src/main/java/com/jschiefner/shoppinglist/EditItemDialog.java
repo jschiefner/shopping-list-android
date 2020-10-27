@@ -5,6 +5,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class EditItemDialog extends ItemDialog {
         TextView title = layout.findViewById(R.id.item_dialog_title);
         title.setText(R.string.edit_item_head);
         itemNameInput.setText(item.getName());
-        categoriesRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+        categoriesRef.orderBy("position", Query.Direction.ASCENDING).get().addOnSuccessListener(queryDocumentSnapshots -> {
             categories = new ArrayList<>(queryDocumentSnapshots.size());
             List<String> categoryStrings = new ArrayList<>(queryDocumentSnapshots.size()+1);
             int counter = 0, position = 0;

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import static android.view.View.VISIBLE;
 public class NewItemDialog extends ItemDialog {
     public NewItemDialog() {
         super();
-        categoriesRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+        categoriesRef.orderBy("position", Query.Direction.ASCENDING).get().addOnSuccessListener(queryDocumentSnapshots -> {
             categories = new ArrayList<>(queryDocumentSnapshots.size());
             List<String> categoryStrings = new ArrayList<>(queryDocumentSnapshots.size()+1);
             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
