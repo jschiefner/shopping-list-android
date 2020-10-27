@@ -55,6 +55,7 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         holder.recyclerView.setAdapter(adapter);
 
         adapter.getSnapshots().addChangeEventListener(holder);
+        holder.hide();
 
         // add swipe helper
         new ItemTouchHelper(new ItemSwipeTouchHelper(ShoppingFragment.instance, adapter, 0, swipeFlags)).attachToRecyclerView(holder.recyclerView);
@@ -116,7 +117,7 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
                 }
                 case REMOVED: {
                     ItemAdapter adapter = (ItemAdapter) recyclerView.getAdapter();
-                    if (adapter.getSnapshots().size() == 0) hide();
+                    if (adapter.isEmpty()) hide();
                     break;
                 }
             }
