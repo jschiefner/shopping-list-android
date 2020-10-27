@@ -12,7 +12,7 @@ import java.util.List;
 
 // TODO: make NewITemDialog and EditItemDialog inherit from ItemDialog (abstract) where common methods such as itemNameInputChange are defined
 public class NewItemDialog extends ItemDialog {
-    public NewItemDialog() {
+    NewItemDialog() {
         super();
         categoriesRef.orderBy("position", Query.Direction.ASCENDING).get().addOnSuccessListener(queryDocumentSnapshots -> {
             categories = new ArrayList<>(queryDocumentSnapshots.size());

@@ -12,13 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class CategoryAdapter extends IgnoreChangesFirestoreRecyclerAdapter<Category, CategoryAdapter.CategoryHolder> {
-    public CategoryAdapter(@NonNull FirestoreRecyclerOptions<Category> options) {
+    CategoryAdapter(@NonNull FirestoreRecyclerOptions<Category> options) {
         super(options);
     }
 
     @Override
     protected void onBindViewHolder(@NonNull CategoryHolder holder, int position, @NonNull Category model) {
-        // get id using getSnapshots().getSnapshot(position).getId()
         model.setId(getSnapshots().getSnapshot(position).getId());
         holder.recylerCategoryButton.setText(model.getName());
         holder.category = model;
@@ -35,11 +34,11 @@ public class CategoryAdapter extends IgnoreChangesFirestoreRecyclerAdapter<Categ
         return new CategoryHolder(view);
     }
 
-    class CategoryHolder extends RecyclerView.ViewHolder {
+    static class CategoryHolder extends RecyclerView.ViewHolder {
         Button recylerCategoryButton;
         Category category;
 
-        public CategoryHolder(@NonNull View itemView) {
+        CategoryHolder(@NonNull View itemView) {
             super(itemView);
             recylerCategoryButton = itemView.findViewById(R.id.recycler_category_button);
         }

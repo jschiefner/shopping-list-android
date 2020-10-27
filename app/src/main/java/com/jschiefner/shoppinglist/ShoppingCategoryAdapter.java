@@ -27,7 +27,7 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
 
     private static final int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
 
-    public ShoppingCategoryAdapter(@NonNull FirestoreRecyclerOptions<Category> options) {
+    ShoppingCategoryAdapter(@NonNull FirestoreRecyclerOptions<Category> options) {
         super(options);
     }
 

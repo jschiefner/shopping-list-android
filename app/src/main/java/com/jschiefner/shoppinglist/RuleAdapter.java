@@ -15,7 +15,7 @@ public class RuleAdapter extends RecyclerView.Adapter<RuleAdapter.RuleHolder> {
     @Override
     public RuleAdapter.RuleHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rule_recycler_view, parent, false);
-        return new RuleAdapter.RuleHolder(view);
+        return new RuleHolder(view);
     }
 
     @Override
@@ -28,10 +28,10 @@ public class RuleAdapter extends RecyclerView.Adapter<RuleAdapter.RuleHolder> {
         return category.getRules().size();
     }
 
-    class RuleHolder extends RecyclerView.ViewHolder {
+    static class RuleHolder extends RecyclerView.ViewHolder {
         TextView ruleTextView;
 
-        public RuleHolder(@NonNull View itemView) {
+        RuleHolder(@NonNull View itemView) {
             super(itemView);
             ruleTextView = itemView.findViewById(R.id.rule_text_view);
         }

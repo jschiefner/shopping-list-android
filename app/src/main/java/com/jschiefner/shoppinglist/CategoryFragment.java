@@ -115,7 +115,6 @@ public class CategoryFragment extends Fragment {
     }
 
     private void addCategory(String name) {
-        // TODO: create new Category from teh passed name
         Category category = new Category(name);
         categoriesRef.add(category);
     }

@@ -72,7 +72,7 @@ public class RuleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void handleFabClick() {
+    private void handleFabClick() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View view = getLayoutInflater().inflate(R.layout.new_dialog_with_text, null);
         TextView topText = view.findViewById(R.id.new_text_top_description);
