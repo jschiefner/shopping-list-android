@@ -8,18 +8,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
     public static MainActivity instance;
     private Category category;
-    public List<ItemAdapter> itemAdapters = new ArrayList<>();
 
     private final CollectionReference categoriesRef = FirebaseFirestore.getInstance().collection("categories");
 
@@ -73,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        itemAdapters.forEach(FirestoreRecyclerAdapter::stopListening);
-        itemAdapters.clear();
     }
 
     public Category getCategory() {

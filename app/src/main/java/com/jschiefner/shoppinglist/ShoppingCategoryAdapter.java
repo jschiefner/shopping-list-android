@@ -40,6 +40,7 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         itemsRef = db.collection("categories").document(model.getId()).collection("items");
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
                 .setQuery(itemsRef, Item.class)
+                .setLifecycleOwner(MainActivity.instance)
                 .build();
         adapter = new ItemAdapter(options, model);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.instance));
@@ -50,10 +51,6 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
 
         // add swipe helper
         new ItemTouchHelper(new ItemSwipeTouchHelper(ShoppingFragment.instance, adapter, 0, swipeFlags)).attachToRecyclerView(holder.recyclerView);
-
-        // stop listening for all adapters when MainActivity exits
-        adapter.startListening();
-        MainActivity.instance.itemAdapters.add(adapter);
     }
 
     @NonNull

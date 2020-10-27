@@ -36,6 +36,7 @@ public class ShoppingFragment extends Fragment {
 
         FirestoreRecyclerOptions<Category> options = new FirestoreRecyclerOptions.Builder<Category>()
                 .setQuery(categoriesRef.orderBy("position", Query.Direction.ASCENDING), Category.class)
+                .setLifecycleOwner(MainActivity.instance)
                 .build();
         adapter = new ShoppingCategoryAdapter(options);
         recyclerView = rootView.findViewById(R.id.main_recycler_view);
@@ -55,7 +56,6 @@ public class ShoppingFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        adapter.startListening();
     }
 
     @Override
@@ -73,7 +73,6 @@ public class ShoppingFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        adapter.stopListening();
     }
 
     public void handleFabClick() {
