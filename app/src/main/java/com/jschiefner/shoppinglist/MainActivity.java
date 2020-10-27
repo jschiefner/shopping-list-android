@@ -1,6 +1,7 @@
 package com.jschiefner.shoppinglist;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
     private Category category;
 
     private final CollectionReference categoriesRef = FirebaseFirestore.getInstance().collection("categories");
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private WriteBatch batch;
+    private int batchFiredTimes = 0;
+    private int batchSize = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,20 +88,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteCompleted() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        batch = db.batch();
         categoriesRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            batchSize = queryDocumentSnapshots.size();
             queryDocumentSnapshots.forEach(documentSnapshot -> {
                 documentSnapshot.getReference()
                         .collection("items")
                         .whereEqualTo("completed", true)
                         .get()
                         .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                            batchFiredTimes += 1;
                             if (queryDocumentSnapshots.isEmpty()) return;
-                            WriteBatch batch = db.batch(); // TODO: batch everything together instead of batching for each category
                             queryDocumentSnapshots1.forEach(documentSnapshot1 -> batch.delete(documentSnapshot1.getReference()));
-                            batch.commit();
+                            commitBatch();
                         });
             });
         });
+    }
+
+    private void commitBatch() {
+        if (batchFiredTimes != batchSize) return;
+        
+        batchSize = 0; batchFiredTimes = 0;
+        batch.commit();
+        batch = null;
     }
 }
