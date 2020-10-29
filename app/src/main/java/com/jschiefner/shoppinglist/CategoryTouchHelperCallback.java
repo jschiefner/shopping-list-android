@@ -1,5 +1,7 @@
 package com.jschiefner.shoppinglist;
 
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,8 +58,14 @@ public class CategoryTouchHelperCallback extends ItemTouchHelper.SimpleCallback 
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        CategoryAdapter.CategoryHolder categoryHolder = (CategoryAdapter.CategoryHolder) viewHolder;
-        categoriesRef.document(categoryHolder.category.getId()).delete();
+        Category category = ((CategoryAdapter.CategoryHolder) viewHolder).category;
+        if (category.isDefault()) {
+            adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+            Toast.makeText(MainActivity.instance, "The Default category cannot be deleted", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            categoriesRef.document(category.getId()).delete();
+        }
     }
 
     @Override
