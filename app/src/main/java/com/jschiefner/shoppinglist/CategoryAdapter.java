@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
@@ -22,8 +23,12 @@ public class CategoryAdapter extends IgnoreChangesFirestoreRecyclerAdapter<Categ
         holder.recylerCategoryButton.setText(model.getName());
         holder.category = model;
         holder.recylerCategoryButton.setOnClickListener(view -> {
-            MainActivity.instance.setCategory(model);
-            NavHostFragment.findNavController(CategoryFragment.instance).navigate(R.id.rules_fragment);
+            if (model.isDefault()) {
+                Toast.makeText(MainActivity.instance, "The Default category cannot have any rules", Toast.LENGTH_SHORT).show();
+            } else {
+                MainActivity.instance.setCategory(model);
+                NavHostFragment.findNavController(CategoryFragment.instance).navigate(R.id.rules_fragment);
+            }
         });
     }
 
