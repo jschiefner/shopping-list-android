@@ -1,7 +1,6 @@
 package com.jschiefner.shoppinglist;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +12,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class MainActivity extends AppCompatActivity {
     public static MainActivity instance;
     private Category category;
@@ -20,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private final CollectionReference categoriesRef = FirebaseFirestore.getInstance().collection("categories");
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private WriteBatch batch;
-    private int batchFiredTimes = 0;
-    private int batchSize = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,27 +89,22 @@ public class MainActivity extends AppCompatActivity {
     private void deleteCompleted() {
         batch = db.batch();
         categoriesRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            batchSize = queryDocumentSnapshots.size();
+            final int batchSize = queryDocumentSnapshots.size();
+            AtomicInteger batchFiredTimes = new AtomicInteger(0);
             queryDocumentSnapshots.forEach(documentSnapshot -> {
                 documentSnapshot.getReference()
                         .collection("items")
                         .whereEqualTo("completed", true)
                         .get()
                         .addOnSuccessListener(queryDocumentSnapshots1 -> {
-                            batchFiredTimes += 1;
-                            if (queryDocumentSnapshots.isEmpty()) return;
-                            queryDocumentSnapshots1.forEach(documentSnapshot1 -> batch.delete(documentSnapshot1.getReference()));
-                            commitBatch();
+                            batchFiredTimes.addAndGet(1);
+                            if (!queryDocumentSnapshots.isEmpty()) queryDocumentSnapshots1.forEach(documentSnapshot1 -> batch.delete(documentSnapshot1.getReference()));
+                            if (batchFiredTimes.get() == batchSize) {
+                                batch.commit();
+                                batch = null;
+                            }
                         });
             });
         });
-    }
-
-    private void commitBatch() {
-        if (batchFiredTimes != batchSize) return;
-        
-        batchSize = 0; batchFiredTimes = 0;
-        batch.commit();
-        batch = null;
     }
 }
