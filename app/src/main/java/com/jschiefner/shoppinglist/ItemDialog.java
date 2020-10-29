@@ -71,6 +71,7 @@ public abstract class ItemDialog implements View.OnClickListener, Spinner.OnItem
         ruleAddText.setOnClickListener(v -> ruleAddCheckbox.toggle());
     }
 
+    // name text field changes
     boolean itemNameInputChange(TextView textView, int i, KeyEvent keyEvent) {
         String input = itemNameInput.getText().toString().toLowerCase();
         if (input.isEmpty()) {
@@ -89,10 +90,17 @@ public abstract class ItemDialog implements View.OnClickListener, Spinner.OnItem
                     if (queryDocumentSnapshots.isEmpty()) {
                         if (spinner.getSelectedItemPosition() != categories.size()) {
                             // stands on existing category
-                            ruleAddCheckbox.setChecked(true);
-                            ruleAddCheckbox.setVisibility(VISIBLE);
-                            ruleAddText.setText(String.format(RULE_FORMAT, input.toLowerCase(), categorySelected.getName()));
-                            ruleAddText.setVisibility(VISIBLE);
+                            Category category = categories.get(spinner.getSelectedItemPosition());
+                            if (category.isDefault()) {
+                                ruleAddCheckbox.setChecked(false);
+                                ruleAddCheckbox.setVisibility(GONE);
+                                ruleAddText.setVisibility(GONE);
+                            } else {
+                                ruleAddCheckbox.setChecked(true);
+                                ruleAddCheckbox.setVisibility(VISIBLE);
+                                ruleAddText.setText(String.format(RULE_FORMAT, input.toLowerCase(), categorySelected.getName()));
+                                ruleAddText.setVisibility(VISIBLE);
+                            }
                         }
                         ruleDeleteCheckbox.setChecked(false);
                         ruleDeleteCheckbox.setVisibility(GONE);
@@ -110,6 +118,7 @@ public abstract class ItemDialog implements View.OnClickListener, Spinner.OnItem
         return true;
     }
 
+    // new category text field changes
     boolean newCategoryInputChange(TextView textView, int i, KeyEvent keyEvent) {
         String newItemName = itemNameInput.getText().toString();
         String newCategoryName = newCategoryEdit.getText().toString();
@@ -148,6 +157,15 @@ public abstract class ItemDialog implements View.OnClickListener, Spinner.OnItem
             newCategoryEdit.setVisibility(View.GONE);
             newCategoryText.setVisibility(GONE);
             categorySelected = categories.get(position);
+            if (categorySelected.isDefault()) {
+                ruleAddCheckbox.setVisibility(GONE);
+                ruleAddCheckbox.setChecked(false);
+                ruleDeleteCheckbox.setVisibility(GONE);
+                ruleDeleteCheckbox.setChecked(false);
+                ruleAddText.setVisibility(GONE);
+                ruleDeleteText.setVisibility(GONE);
+                return;
+            }
         }
 
         String newRuleName = newItemName.toLowerCase();
@@ -211,9 +229,9 @@ public abstract class ItemDialog implements View.OnClickListener, Spinner.OnItem
         else ruleDeleteCheckbox.setButtonTintList(ColorStateList.valueOf(ShoppingFragment.instance.getContext().getResources().getColor(R.color.gray_default_checkbox)));
     }
 
-    boolean emptyInputWarned(String input) {
+    boolean emptyInputWarned(String input, String what) {
         if (input.isEmpty()) {
-            Toast.makeText(ShoppingFragment.instance.getContext(), "Please fill out the Item Name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ShoppingFragment.instance.getContext(), "Please fill out the " + what + " name", Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;

@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Category {
+    private static final String DEFAULT = "Default";
+
     private String id;
     private String name;
     private List<String> rules;
@@ -74,5 +76,10 @@ public class Category {
 
     public void setPosition(double position) {
         this.position = position;
+    }
+
+    @Exclude
+    public boolean isDefault() {
+        return name.equals(DEFAULT);
     }
 }

@@ -45,7 +45,7 @@ public class EditItemDialog extends ItemDialog {
     @Override
     public void onClick(View v) {
         String newItemName = itemNameInput.getText().toString();
-        if (emptyInputWarned(newItemName)) return;
+        if (emptyInputWarned(newItemName, "item")) return;
 
         int size = categories.size();
         int position = spinner.getSelectedItemPosition();
@@ -54,6 +54,7 @@ public class EditItemDialog extends ItemDialog {
         String newRuleName = newItemName.toLowerCase();
         if (position == size) { // new category
             String newCategoryName = newCategoryEdit.getText().toString();
+            if (emptyInputWarned(newCategoryName, "category")) return;
             Category category;
             if (ruleAddCheckbox.isChecked()) category = new Category(newCategoryName, newRuleName); // rule added to new category
             else category = new Category(newCategoryName); // rule not added
