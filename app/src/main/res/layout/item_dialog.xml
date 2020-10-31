@@ -5,147 +5,166 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center">
-
-    <TextView
-        android:id="@+id/item_dialog_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="italic"
-        android:text="@string/new_item"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp" />
-
-    <GridLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:useDefaultMargins="true">
-
-        <TextView
-            android:text="@string/item_tag"
-            android:layout_row="0"
-            android:layout_column="0" />
-
-        <EditText
-            android:id="@+id/item_name_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textNoSuggestions"
-            android:textColor="@color/colorPrimary"
-            android:imeOptions="actionDone"
-            android:maxLines="1"
-            android:layout_row="0"
-            android:layout_column="1" />
-
-        <TextView
-            android:layout_row="1"
-            android:layout_column="0"
-            android:text="@string/category_tag" />
-
-        <Spinner
-            android:id="@+id/category_spinner"
-            android:layout_row="1"
-            android:layout_column="1"
-            android:layout_gravity="right" />
-
-        <TextView
-            android:id="@+id/new_category_text_view"
-            android:layout_row="2"
-            android:layout_column="0"
-            android:text="@string/new_category_text"
-            android:visibility="gone" />
-
-        <EditText
-            android:id="@+id/new_category_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textNoSuggestions"
-            android:imeOptions="actionDone"
-            android:textColor="@color/colorPrimary"
-            android:layout_row="2"
-            android:layout_column="1"
-            android:visibility="gone"/>
-
-    </GridLayout>
-
-    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginBottom="15dp" >
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/item_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:text="@string/new_item"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="italic" />
 
         <LinearLayout
-            android:layout_row="0"
-            android:layout_column="0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_gravity="center_vertical">
+            android:paddingTop="15dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/checkbox_rule_to_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:visibility="gone"
-                    android:buttonTint="@color/red" />
+                android:orientation="horizontal"
+                android:paddingHorizontal="15dp">
 
                 <TextView
-                    android:id="@+id/text_rule_to_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/red"
-                    android:visibility="gone"/>
+                    android:text="@string/item_tag" />
 
+                <EditText
+                    android:id="@+id/item_name_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:imeOptions="actionDone"
+                    android:inputType="textNoSuggestions"
+                    android:maxLines="1"
+                    android:textColor="@color/colorPrimary"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/checkbox_rule_to_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:visibility="gone"/>
+                android:orientation="horizontal"
+                android:paddingHorizontal="15dp">
 
                 <TextView
-                    android:id="@+id/text_rule_to_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    android:visibility="gone"/>
+                    android:layout_centerVertical="true"
+                    android:text="@string/category_tag"/>
+
+                <Spinner
+                    android:id="@+id/category_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="end" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="15dp">
+
+                <TextView
+                    android:id="@+id/new_category_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_category_text"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/new_category_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:ems="10"
+                    android:imeOptions="actionDone"
+                    android:inputType="textNoSuggestions"
+                    android:textColor="@color/colorPrimary"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/save_button"
-            android:layout_width="wrap_content"
+        <GridLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_row="0"
-            android:layout_column="1"
-            android:layout_gravity="right|center_vertical"
-            android:background="@color/colorAccent"
-            android:text="@string/button_save" />
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:paddingHorizontal="15dp">
 
-    </GridLayout>
+            <LinearLayout
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkbox_rule_to_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/red"
+                        android:checked="false"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/text_rule_to_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkbox_rule_to_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/text_rule_to_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorAccent"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:layout_gravity="right|center_vertical"
+                android:background="@color/colorAccent"
+                android:text="@string/button_save" />
+
+        </GridLayout>
     </LinearLayout>
-
-
 </LinearLayout>
