@@ -24,6 +24,7 @@ public class ShoppingFragment extends Fragment {
     private CollectionReference categoriesRef = db.collection("categories");
     private ShoppingCategoryAdapter adapter;
     public static ShoppingFragment instance;
+    static BackClickableEditText focusedEditText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +77,10 @@ public class ShoppingFragment extends Fragment {
     }
 
     public void handleFabClick() {
+        if (focusedEditText != null) {
+            focusedEditText.clearFocus();
+            focusedEditText = null;
+        }
         new NewItemDialog().show();
     }
 }

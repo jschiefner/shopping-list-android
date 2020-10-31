@@ -49,7 +49,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
     static class ItemHolder extends RecyclerView.ViewHolder implements TextView.OnEditorActionListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener {
         Item item;
-        EditText editText;
+        BackClickableEditText editText;
         CheckBox checkBox;
 
         ItemHolder(@NonNull View itemView) {
@@ -63,7 +63,10 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
         @Override
         public void onFocusChange(View view, boolean hasFocus) {
-            if (hasFocus) return;
+            if (hasFocus) {
+                ShoppingFragment.focusedEditText = (BackClickableEditText) view;
+                return;
+            }
 
             String newName = editText.getText().toString();
             if (!item.getName().equals(newName)) {

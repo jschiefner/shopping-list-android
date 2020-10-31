@@ -24,7 +24,7 @@
             android:layout_column="0"
             android:layout_marginTop="5dp" />
 
-        <EditText
+        <com.jschiefner.shoppinglist.BackClickableEditText
             android:id="@+id/item_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
