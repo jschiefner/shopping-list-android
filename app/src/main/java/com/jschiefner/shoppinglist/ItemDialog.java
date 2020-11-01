@@ -120,7 +120,7 @@ public abstract class ItemDialog implements View.OnClickListener, Spinner.OnItem
 
     // new category text field changes
     boolean newCategoryInputChange(TextView textView, int i, KeyEvent keyEvent) {
-        String newItemName = itemNameInput.getText().toString();
+        String newItemName = itemNameInput.getText().toString().toLowerCase();
         String newCategoryName = newCategoryEdit.getText().toString();
         ruleAddCheckbox.setVisibility(VISIBLE);
         ruleAddCheckbox.setChecked(true);
