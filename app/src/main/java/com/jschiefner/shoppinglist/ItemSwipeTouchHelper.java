@@ -1,5 +1,6 @@
 package com.jschiefner.shoppinglist;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -15,11 +16,11 @@ public class ItemSwipeTouchHelper extends ItemTouchHelper.SimpleCallback {
     private final Drawable pencilIcon;
     private final RecyclerView.Adapter adapter;
 
-    public ItemSwipeTouchHelper(ShoppingFragment shoppingFragment, RecyclerView.Adapter adapter, int dragDirs, int swipeDirs) {
+    public ItemSwipeTouchHelper(Context context, RecyclerView.Adapter adapter, int dragDirs, int swipeDirs) {
         super(dragDirs, swipeDirs);
         this.adapter = adapter;
-        trashIcon = ContextCompat.getDrawable(shoppingFragment.getContext(), R.drawable.bin);
-        pencilIcon = ContextCompat.getDrawable(shoppingFragment.getContext(), R.drawable.pencil);
+        trashIcon = ContextCompat.getDrawable(context, R.drawable.bin);
+        pencilIcon = ContextCompat.getDrawable(context, R.drawable.pencil);
     }
 
     @Override

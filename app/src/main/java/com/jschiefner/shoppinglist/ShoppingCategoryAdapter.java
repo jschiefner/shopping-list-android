@@ -1,5 +1,6 @@
 package com.jschiefner.shoppinglist;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,7 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         holder.hide();
 
         // add swipe helper
-        new ItemTouchHelper(new ItemSwipeTouchHelper(ShoppingFragment.instance, adapter, 0, swipeFlags)).attachToRecyclerView(holder.recyclerView);
+        new ItemTouchHelper(new ItemSwipeTouchHelper(holder.getContext(), adapter,0, swipeFlags)).attachToRecyclerView(holder.recyclerView);
     }
 
     @NonNull
@@ -118,6 +119,10 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         @Override
         public void onError(@NonNull FirebaseFirestoreException e) {
             // pass
+        }
+
+        public Context getContext() {
+            return shoppingCategoryCard.getContext();
         }
     }
 }
