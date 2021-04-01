@@ -1,6 +1,7 @@
 package com.jschiefner.shoppinglist;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,9 +34,11 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
         holder.item = model;
         holder.editText.setText(model.getName());
         holder.checkBox.setChecked(holder.item.getCompleted());
-
+        if (MainActivity.instance.isEditEnterPressed() && model.isNew()) {
+            holder.editText.requestFocus();
+            MainActivity.instance.setEditEnterPressed(false);
+        }
     }
-
     @NonNull
     @Override
     public ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -47,7 +50,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
         return getSnapshots().size() == 0;
     }
 
-    static class ItemHolder extends RecyclerView.ViewHolder implements TextView.OnEditorActionListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener {
+    class ItemHolder extends RecyclerView.ViewHolder implements TextView.OnEditorActionListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener {
         Item item;
         BackClickableEditText editText;
         CheckBox checkBox;
@@ -77,14 +80,22 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-            InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+            // called when enter is pressed when editing an item in the main table layout
+//            InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//            imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+
+            // Save current item
             String newName = editText.getText().toString();
             if (!item.getName().equals(newName)) {
                 item.setName(newName);
                 item.getReference().set(item);
             }
-            editText.clearFocus();
+
+            // add new empty item
+            item.getReference().getParent().add(new Item("", false));
+            MainActivity.instance.setEditEnterPressed(true);
+
+            // editText.clearFocus(); // suppress for now when using enter-newline feature
             return true;
         }
 

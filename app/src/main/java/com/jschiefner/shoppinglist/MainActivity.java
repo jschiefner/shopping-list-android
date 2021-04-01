@@ -1,6 +1,7 @@
 package com.jschiefner.shoppinglist;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private final CollectionReference categoriesRef = FirebaseFirestore.getInstance().collection("categories");
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private WriteBatch batch;
+
+    private boolean editEnterPressed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,5 +109,14 @@ public class MainActivity extends AppCompatActivity {
                         });
             });
         });
+    }
+
+    public void setEditEnterPressed(boolean editEnterPressed) {
+        Log.i("CUSTOM", "setEditEnterPressed to " + editEnterPressed);
+        this.editEnterPressed = editEnterPressed;
+    }
+
+    public boolean isEditEnterPressed() {
+        return editEnterPressed;
     }
 }

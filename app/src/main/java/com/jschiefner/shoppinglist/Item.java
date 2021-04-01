@@ -17,6 +17,12 @@ public class Item {
         // needed for Firestore
     }
 
+    public Item(String id, String name, boolean completed) {
+        this.id = id;
+        this.name = name;
+        this.completed = completed;
+    }
+
     public Item(String name, boolean completed) {
         this.name = name;
         this.completed = completed;
@@ -59,6 +65,10 @@ public class Item {
 
     public boolean getCompleted() {
         return completed;
+    }
+
+    public boolean isNew() {
+        return name.isEmpty();
     }
 
     public void setCompleted(boolean completed) {

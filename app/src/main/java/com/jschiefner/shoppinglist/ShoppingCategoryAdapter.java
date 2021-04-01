@@ -61,7 +61,7 @@ public class ShoppingCategoryAdapter extends FirestoreRecyclerAdapter<Category, 
         return new CategoryHolder(view);
     }
 
-    static class CategoryHolder extends RecyclerView.ViewHolder implements ChangeEventListener {
+    class CategoryHolder extends RecyclerView.ViewHolder implements ChangeEventListener {
         CardView shoppingCategoryCard;
         TextView categoryName;
         RecyclerView recyclerView;
